@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@savory/domain": ["packages/domain/src/index.ts"],
+      "@savory/domain/*": ["packages/domain/src/*"],
+      "@savory/contracts": ["packages/contracts/src/index.ts"],
+      "@savory/contracts/*": ["packages/contracts/src/*"]
+    }
+  }
+}

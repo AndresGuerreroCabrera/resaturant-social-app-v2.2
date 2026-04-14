@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Deseados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="desired-page dark-page" data-page-theme="dark">
+  <main class="list-screen desired-screen" data-desired-page>
+    <div class="list-layout">
+      <section class="filters-panel desired-filters-panel is-collapsed" aria-label="Filtros de deseados" data-filters-panel>
+        <button class="filters-toggle" type="button" aria-expanded="false" aria-controls="desired-filters-content" id="filters-toggle">
+          <span class="section-kicker">
+            <span class="section-kicker-text">
+              <span class="filters-title">Filtros</span>
+              <span>Precio, estrellas o hashtags</span>
+            </span>
+          </span>
+          <span class="filters-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7.4 9.4 12 14l4.6-4.6 1.4 1.4-6 6-6-6 1.4-1.4Z"></path>
+            </svg>
+          </span>
+        </button>
+
+        <div class="filters-content" id="desired-filters-content">
+          <div class="filter-stack">
+            <section class="filter-group" aria-label="Filtro por precio">
+              <h3>Precio medio</h3>
+              <div class="filter-chip-row">
+                <button class="filter-chip is-active" type="button" data-price-filter="todos" aria-pressed="true">Todos</button>
+                <button class="filter-chip" type="button" data-price-filter="€" aria-pressed="false">€</button>
+                <button class="filter-chip" type="button" data-price-filter="€€" aria-pressed="false">€€</button>
+                <button class="filter-chip" type="button" data-price-filter="€€€" aria-pressed="false">€€€</button>
+              </div>
+            </section>
+
+            <section class="filter-group" aria-label="Filtro por puntuacion">
+              <h3>Estrellas</h3>
+              <div class="filter-chip-row rating-filter-row">
+                <button class="filter-chip is-active" type="button" data-rating-filter="todos" aria-pressed="true">Todos</button>
+                <button class="rating-star-button" type="button" data-rating-filter="1" aria-label="1 estrella" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="2" aria-label="2 estrellas" aria-pressed="false">&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="3" aria-label="3 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="4" aria-label="4 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="5" aria-label="5 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;&#9733;</button>
+              </div>
+            </section>
+
+            <section class="filter-group" aria-label="Filtro por hashtags">
+              <h3>Hashtags</h3>
+              <div class="hashtag-searchbox">
+                <label class="searchbox hashtag-input-shell" aria-label="Añadir hashtag manualmente">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                  </svg>
+                  <input id="hashtag-input" type="text" placeholder="Escribe un hashtag, por ejemplo brunch" list="desired-hashtag-suggestions">
+                </label>
+                <button class="filter-chip hashtag-add-button" id="add-hashtag-button" type="button">Añadir</button>
+                <datalist id="desired-hashtag-suggestions"></datalist>
+              </div>
+              <div class="selected-tags-row" id="selected-hashtags"></div>
+              <div class="filter-chip-row" id="hashtag-filters"></div>
+              <p class="filter-hint">Escribe hashtags o toca sugerencias. Puedes quitar cualquier hashtag activo pulsándolo.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="restaurants-summary desired-summary" aria-live="polite">
+        <h2>Sitios que quieres probar</h2>
+        <p id="results-count">0 resultados</p>
+      </section>
+
+      <section class="restaurants-list desired-list" id="desired-restaurants-list" aria-label="Listado de restaurantes deseados"></section>
+
+    </div>
+
+    <div class="desired-visit-modal" id="desired-visit-modal" hidden>
+      <section class="selected-place-sheet desired-visit-sheet" id="desired-visit-sheet" aria-label="Configurar visita">
+        <div class="selected-place-header">
+          <div>
+            <p class="selected-place-kicker">Ya he ido</p>
+            <h2 id="desired-visit-name">Nombre del restaurante</h2>
+            <p class="selected-place-address">Se guardara en tu lista privada con los datos que elijas.</p>
+          </div>
+          <button class="sheet-close-button" id="close-desired-visit-button" type="button" aria-label="Cerrar ficha">x</button>
+        </div>
+
+        <div class="search-config-grid">
+          <section class="search-config-group" aria-label="Visibilidad en tu lista">
+            <h3>Visibilidad</h3>
+            <section class="segmented-switch segmented-switch-2 place-visibility-switch desired-visit-visibility-switch" aria-label="Elegir visibilidad del restaurante" data-active-index="0" data-desired-visit-visibility-switch>
+              <button class="switch-option is-active" type="button" data-index="0" data-desired-visit-visibility="privado" aria-pressed="true">Privado</button>
+              <button class="switch-option" type="button" data-index="1" data-desired-visit-visibility="publico" aria-pressed="false">Publico</button>
+            </section>
+          </section>
+
+          <section class="search-config-group" id="desired-visit-price-group" aria-label="Precio promedio">
+            <h3>Precio promedio</h3>
+            <div class="filter-chip-row" id="desired-visit-price-filters">
+              <button class="filter-chip is-active" type="button" data-desired-visit-price="€" aria-pressed="true">€</button>
+              <button class="filter-chip" type="button" data-desired-visit-price="€€" aria-pressed="false">€€</button>
+              <button class="filter-chip" type="button" data-desired-visit-price="€€€" aria-pressed="false">€€€</button>
+            </div>
+          </section>
+
+          <section class="search-config-group" id="desired-visit-rating-group" aria-label="Puntuacion de la visita">
+            <h3>Puntuacion</h3>
+            <div class="rating-input-row" id="desired-visit-rating-filters">
+              <button class="rating-star-button" type="button" data-desired-visit-rating="1" aria-label="1 estrella" aria-pressed="false">&#9733;</button>
+              <button class="rating-star-button" type="button" data-desired-visit-rating="2" aria-label="2 estrellas" aria-pressed="false">&#9733;</button>
+              <button class="rating-star-button" type="button" data-desired-visit-rating="3" aria-label="3 estrellas" aria-pressed="false">&#9733;</button>
+              <button class="rating-star-button" type="button" data-desired-visit-rating="4" aria-label="4 estrellas" aria-pressed="false">&#9733;</button>
+              <button class="rating-star-button" type="button" data-desired-visit-rating="5" aria-label="5 estrellas" aria-pressed="false">&#9733;</button>
+            </div>
+          </section>
+
+          <section class="search-config-group" id="desired-visit-hashtags-group" aria-label="Hashtags de la visita">
+            <h3>Hashtags</h3>
+            <div class="hashtag-searchbox">
+              <label class="searchbox hashtag-input-shell" aria-label="Añadir hashtag de la visita">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                </svg>
+                <input id="desired-visit-hashtag-input" type="text" placeholder="Escribe un hashtag, por ejemplo casero" list="desired-visit-hashtag-suggestions">
+              </label>
+              <button class="filter-chip hashtag-add-button" id="desired-visit-add-hashtag-button" type="button">Añadir</button>
+              <datalist id="desired-visit-hashtag-suggestions">
+                <option value="#casero"></option>
+                <option value="#terraza"></option>
+                <option value="#brunch"></option>
+                <option value="#citas"></option>
+                <option value="#bar"></option>
+                <option value="#favorito"></option>
+              </datalist>
+            </div>
+            <div class="selected-tags-row" id="desired-visit-selected-hashtags"></div>
+          </section>
+
+          <section class="search-config-group" id="desired-visit-comment-group" aria-label="Comentario de la visita">
+            <h3>Comentario</h3>
+            <label class="comment-field" for="desired-visit-comment-input">
+              <textarea id="desired-visit-comment-input" class="comment-textarea" rows="4" maxlength="280" placeholder="Que te gusto, que pedirias otra vez, si merece la pena..."></textarea>
+            </label>
+          </section>
+        </div>
+
+        <div class="selected-place-actions">
+          <button class="action-button sheet-secondary-button" id="cancel-desired-visit-button" type="button">Cancelar</button>
+          <button class="action-button sheet-primary-button" id="save-desired-visit-button" type="button">Guardar en tu lista</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="bottom-panel list-bottom-panel desired-bottom-panel">
+      <div class="search-row">
+        <label class="searchbox" aria-label="Buscar por nombre de restaurante deseado">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+          </svg>
+          <input id="restaurant-search" type="text" placeholder="Buscar restaurante deseado por nombre">
+        </label>
+      </div>
+
+      <nav class="bottom-nav" aria-label="Menú principal">
+        <a class="nav-item is-current" href="deseados.html" aria-label="Deseados" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="lista.html" aria-label="Lista">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14v2H5V7Zm0 4h14v2H5v-2Zm0 4h14v2H5v-2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="index.html" aria-label="Inicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4.2 4 10.6V20h5.8v-5.2h4.4V20H20v-9.4L12 4.2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="recommendations.html" aria-label="Recomendaciones">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6h12v12H6V6Zm2 2v8h8V8H8Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="profile.html" aria-label="Perfil">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"></path>
+          </svg>
+        </a>
+      </nav>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="deseados.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory</title>
+  <script>
+    (() => {
+      try {
+        const authToken = window.localStorage.getItem("sb-sfjkcerlssdplvipftrs-auth-token");
+
+        if (authToken) {
+          return;
+        }
+
+        const authUrl = new URL("auth.html", window.location.href);
+        authUrl.searchParams.set(
+          "redirect",
+          `${window.location.pathname}${window.location.search}${window.location.hash}`
+        );
+        window.location.replace(authUrl.href);
+      } catch {
+        // If localStorage is unavailable, the session check in script.js will handle the fallback.
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-page" data-page-theme="light">
+  <main class="app-shell" data-home-search-page>
+    <section class="map-screen">
+      <header class="topbar">
+        <div class="topbar-spacer" aria-hidden="true"></div>
+        <h1 class="brand">Savory</h1>
+        <a class="avatar-button" href="auth.html" aria-label="Abrir login o registro">
+          <span class="avatar-badge" data-user-avatar data-avatar-style="chef" aria-hidden="true"></span>
+        </a>
+      </header>
+
+      <section class="visibility-switch segmented-switch" aria-label="Filtro de visibilidad" data-active-index="0">
+        <button class="switch-option is-active" type="button" data-index="0" data-map-visibility="todos" aria-pressed="true">Todos</button>
+        <button class="switch-option" type="button" data-index="1" data-map-visibility="privado" aria-pressed="false">Privado</button>
+        <button class="switch-option" type="button" data-index="2" data-map-visibility="publico" aria-pressed="false">Publico</button>
+      </section>
+
+      <section class="map-area" aria-label="Mapa principal">
+        <div class="real-map" id="google-map" role="presentation"></div>
+      </section>
+
+      <section class="bottom-panel">
+        <div class="search-row">
+          <label class="searchbox" aria-label="Buscar restaurantes">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+            </svg>
+            <input id="places-search-input" type="text" placeholder="Buscar restaurantes en el mapa" autocomplete="off">
+          </label>
+        </div>
+
+        <p class="map-search-feedback" id="places-search-status" aria-live="polite">Cargando buscador de sitios...</p>
+        <section class="map-search-results" id="places-search-results" aria-label="Resultados de Google Places" hidden></section>
+
+        <section class="selected-place-sheet" id="selected-place-sheet" aria-label="Restaurante seleccionado" hidden>
+          <div class="selected-place-header">
+            <div>
+              <p class="selected-place-kicker">Restaurante encontrado</p>
+              <h2 id="selected-place-name">Nombre del restaurante</h2>
+              <p class="selected-place-address" id="selected-place-address"></p>
+            </div>
+            <button class="sheet-close-button" id="close-selected-place-button" type="button" aria-label="Cerrar ficha">×</button>
+          </div>
+
+          <div class="search-config-grid">
+            <section class="search-config-group" aria-label="Tipo de guardado">
+              <h3>Estado</h3>
+              <section class="segmented-switch segmented-switch-2 place-state-switch" aria-label="Elegir estado del restaurante" data-active-index="0" data-add-target-switch>
+                <button class="switch-option is-active" type="button" data-index="0" data-save-target="desired" aria-pressed="true">Quiero ir</button>
+                <button class="switch-option" type="button" data-index="1" data-save-target="list" aria-pressed="false">Ya he ido</button>
+              </section>
+            </section>
+
+            <section class="search-config-group search-config-group-visibility" aria-label="Visibilidad del restaurante" id="selected-place-visibility-group" hidden>
+              <h3>Visibilidad</h3>
+              <section class="segmented-switch segmented-switch-2 place-visibility-switch" aria-label="Elegir visibilidad del restaurante" data-active-index="0" data-add-visibility-switch>
+                <button class="switch-option is-active" type="button" data-index="0" data-save-visibility="privado" aria-pressed="true">Privado</button>
+                <button class="switch-option" type="button" data-index="1" data-save-visibility="publico" aria-pressed="false">Publico</button>
+              </section>
+            </section>
+
+            <section class="search-config-group" id="selected-place-price-group" aria-label="Precio deseado">
+              <h3>Precio</h3>
+              <div class="filter-chip-row" id="places-price-filters">
+                <button class="filter-chip is-active" type="button" data-place-price="€" aria-pressed="true">€</button>
+                <button class="filter-chip" type="button" data-place-price="€€" aria-pressed="false">€€</button>
+                <button class="filter-chip" type="button" data-place-price="€€€" aria-pressed="false">€€€</button>
+              </div>
+            </section>
+
+            <section class="search-config-group" id="selected-place-rating-group" aria-label="Puntuacion del restaurante">
+              <h3>Puntuacion</h3>
+              <div class="rating-input-row" id="places-rating-filters">
+                <button class="rating-star-button" type="button" data-place-rating="1" aria-label="1 estrella" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-place-rating="2" aria-label="2 estrellas" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-place-rating="3" aria-label="3 estrellas" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-place-rating="4" aria-label="4 estrellas" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-place-rating="5" aria-label="5 estrellas" aria-pressed="false">&#9733;</button>
+              </div>
+            </section>
+
+            <section class="search-config-group" id="selected-place-hashtags-group" aria-label="Hashtags del restaurante">
+              <h3>Hashtags</h3>
+              <div class="hashtag-searchbox">
+                <label class="searchbox hashtag-input-shell" aria-label="Anadir hashtag">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                  </svg>
+                  <input id="places-hashtag-input" type="text" placeholder="Escribe un hashtag, por ejemplo brunch" list="places-hashtag-suggestions">
+                </label>
+                <button class="filter-chip hashtag-add-button" id="places-add-hashtag-button" type="button">Anadir</button>
+                <datalist id="places-hashtag-suggestions">
+                  <option value="#bueno"></option>
+                  <option value="#calidad"></option>
+                  <option value="#terraza"></option>
+                  <option value="#brunch"></option>
+                  <option value="#casero"></option>
+                  <option value="#citas"></option>
+                </datalist>
+              </div>
+              <div class="selected-tags-row" id="places-selected-hashtags"></div>
+              <p class="filter-hint">Elige la lista, el precio, la puntuacion y los hashtags antes de anadirlo.</p>
+            </section>
+
+            <section class="search-config-group" id="selected-place-comment-group" aria-label="Comentario del restaurante">
+              <h3>Comentario</h3>
+              <label class="comment-field" for="places-comment-input">
+                <textarea id="places-comment-input" class="comment-textarea" rows="4" maxlength="280" placeholder="Algo breve: que pediste, si volverias, lo mejor del sitio..."></textarea>
+              </label>
+            </section>
+          </div>
+
+          <div class="selected-place-actions">
+            <button class="action-button sheet-secondary-button" id="cancel-selected-place-button" type="button">Cancelar</button>
+            <button class="action-button sheet-primary-button" id="add-selected-place-button" type="button">Anadir</button>
+          </div>
+        </section>
+
+        <nav class="bottom-nav" aria-label="Menu principal">
+          <a class="nav-item" href="deseados.html" aria-label="Deseados">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+            </svg>
+          </a>
+          <a class="nav-item" href="lista.html" aria-label="Lista">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 7h14v2H5V7Zm0 4h14v2H5v-2Zm0 4h14v2H5v-2Z"></path>
+            </svg>
+          </a>
+          <a class="nav-item is-current" href="index.html" aria-label="Inicio" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 4.2 4 10.6V20h5.8v-5.2h4.4V20H20v-9.4L12 4.2Z"></path>
+            </svg>
+          </a>
+          <a class="nav-item" href="recommendations.html" aria-label="Recomendaciones">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6h12v12H6V6Zm2 2v8h8V8H8Z"></path>
+            </svg>
+          </a>
+          <a class="nav-item" href="profile.html" aria-label="Perfil">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"></path>
+            </svg>
+          </a>
+        </nav>
+      </section>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4iidoj_rACJ77Sn8LKOgO-SRqkSmN71g&libraries=places&loading=async&callback=initSavoryGooglePlacesSearch"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Lista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="list-page light-page" data-page-theme="light">
+  <main class="list-screen" data-list-page>
+    <div class="list-layout">
+      <section class="visibility-switch list-visibility-switch segmented-switch" aria-label="Filtro de visibilidad" data-active-index="0">
+        <button class="switch-option is-active" type="button" data-index="0" data-visibility-filter="todos" aria-pressed="true">Todos</button>
+        <button class="switch-option" type="button" data-index="1" data-visibility-filter="privado" aria-pressed="false">Privado</button>
+        <button class="switch-option" type="button" data-index="2" data-visibility-filter="publico" aria-pressed="false">Publico</button>
+      </section>
+
+      <section class="filters-panel is-collapsed" aria-label="Filtros de la lista" data-filters-panel>
+        <button class="filters-toggle" type="button" aria-expanded="false" aria-controls="filters-content" id="filters-toggle">
+          <span class="section-kicker">
+            <span class="section-kicker-text">
+              <span class="filters-title">Filtros</span>
+              <span>Precio, estrellas o hashtags</span>
+            </span>
+          </span>
+          <span class="filters-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7.4 9.4 12 14l4.6-4.6 1.4 1.4-6 6-6-6 1.4-1.4Z"></path>
+            </svg>
+          </span>
+        </button>
+
+        <div class="filters-content" id="filters-content">
+          <div class="filter-stack">
+          <section class="filter-group" aria-label="Filtro por precio">
+            <h3>Precio medio</h3>
+            <div class="filter-chip-row">
+              <button class="filter-chip is-active" type="button" data-price-filter="todos" aria-pressed="true">Todos</button>
+              <button class="filter-chip" type="button" data-price-filter="€" aria-pressed="false">€</button>
+              <button class="filter-chip" type="button" data-price-filter="€€" aria-pressed="false">€€</button>
+              <button class="filter-chip" type="button" data-price-filter="€€€" aria-pressed="false">€€€</button>
+            </div>
+          </section>
+
+          <section class="filter-group" aria-label="Filtro por puntuacion">
+            <h3>Estrellas</h3>
+            <div class="filter-chip-row rating-filter-row">
+              <button class="filter-chip is-active" type="button" data-rating-filter="todos" aria-pressed="true">Todos</button>
+              <button class="rating-star-button" type="button" data-rating-filter="1" aria-label="1 estrella" aria-pressed="false">&#9733;</button>
+              <button class="rating-star-button" type="button" data-rating-filter="2" aria-label="2 estrellas" aria-pressed="false">&#9733;&#9733;</button>
+              <button class="rating-star-button" type="button" data-rating-filter="3" aria-label="3 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;</button>
+              <button class="rating-star-button" type="button" data-rating-filter="4" aria-label="4 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;</button>
+              <button class="rating-star-button" type="button" data-rating-filter="5" aria-label="5 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;&#9733;</button>
+            </div>
+          </section>
+
+          <section class="filter-group" aria-label="Filtro por hashtags">
+            <h3>Hashtags</h3>
+            <div class="hashtag-searchbox">
+              <label class="searchbox hashtag-input-shell" aria-label="Añadir hashtag manualmente">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                </svg>
+                <input id="hashtag-input" type="text" placeholder="Escribe un hashtag, por ejemplo brunch" list="hashtag-suggestions">
+              </label>
+              <button class="filter-chip hashtag-add-button" id="add-hashtag-button" type="button">Añadir</button>
+              <datalist id="hashtag-suggestions"></datalist>
+            </div>
+            <div class="selected-tags-row" id="selected-hashtags"></div>
+            <div class="filter-chip-row" id="hashtag-filters"></div>
+            <p class="filter-hint">Puedes escribir hashtags manualmente o tocar sugerencias. Pulsa sobre un hashtag activo para quitarlo.</p>
+          </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="restaurants-summary" aria-live="polite">
+        <h2>Restaurantes guardados</h2>
+        <p id="results-count">0 resultados</p>
+        <p class="list-feedback" id="list-feedback" aria-live="polite"></p>
+      </section>
+
+      <section class="restaurants-list" id="restaurants-list" aria-label="Listado de restaurantes"></section>
+    </div>
+
+    <section class="bottom-panel list-bottom-panel">
+      <div class="search-row">
+        <label class="searchbox" aria-label="Buscar por nombre de restaurante">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+          </svg>
+          <input id="restaurant-search" type="text" placeholder="Buscar restaurante por nombre">
+        </label>
+      </div>
+
+      <nav class="bottom-nav" aria-label="Menú principal">
+        <a class="nav-item" href="deseados.html" aria-label="Deseados">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item is-current" href="lista.html" aria-label="Lista" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14v2H5V7Zm0 4h14v2H5v-2Zm0 4h14v2H5v-2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="index.html" aria-label="Inicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4.2 4 10.6V20h5.8v-5.2h4.4V20H20v-9.4L12 4.2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="recommendations.html" aria-label="Recomendaciones">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6h12v12H6V6Zm2 2v8h8V8H8Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="profile.html" aria-label="Perfil">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"></path>
+          </svg>
+        </a>
+      </nav>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="lista.js"></script>
+</body>
+</html>

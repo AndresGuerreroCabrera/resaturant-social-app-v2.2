@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="profile-page light-page" data-page-theme="light">
+  <main class="profile-screen" data-profile-page>
+    <div class="profile-layout">
+      <a class="profile-back-link" id="profile-back-link" href="profile.html" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+        </svg>
+        <span>Volver a mi perfil</span>
+      </a>
+
+      <section class="profile-hero-card" aria-label="Cabecera del perfil">
+        <div class="profile-hero-main">
+          <span class="avatar-badge profile-avatar-large" id="profile-avatar" data-avatar-style="chef" aria-hidden="true"></span>
+
+          <div class="profile-hero-copy">
+            <p class="profile-kicker" id="profile-kicker">Tu perfil</p>
+            <h1 id="profile-name">Invitado</h1>
+            <p class="profile-hero-note" id="profile-note">Inicia sesion para ver tu perfil completo.</p>
+            <a class="profile-inline-link" id="profile-session-link" href="auth.html">Log in / Sign Up</a>
+          </div>
+        </div>
+
+        <button class="action-button profile-add-friend-button" id="profile-add-friend-button" type="button" hidden>
+          Anadir amigo
+        </button>
+      </section>
+
+      <section class="profile-expertise-panel" aria-label="Expertise del perfil">
+        <div class="profile-section-heading">
+          <p class="profile-section-kicker">Expertise</p>
+          <h2 id="profile-expertise-title">Nivel 1 · Basico</h2>
+          <p class="profile-expertise-copy" id="profile-expertise-copy">
+            Subes cuando otras personas hacen swipe a la derecha en tus recomendaciones.
+          </p>
+        </div>
+
+        <div class="profile-expertise-metrics">
+          <section class="profile-expertise-stat">
+            <span class="meta-label">Puntuacion</span>
+            <strong id="profile-expertise-rating">1000</strong>
+          </section>
+
+          <section class="profile-expertise-stat">
+            <span class="meta-label">Swipes a favor</span>
+            <strong id="profile-expertise-likes">0</strong>
+          </section>
+        </div>
+
+        <div class="profile-progress-block">
+          <div class="profile-progress-track" aria-hidden="true">
+            <span class="profile-progress-fill" id="profile-expertise-progress"></span>
+          </div>
+          <p class="profile-progress-copy" id="profile-expertise-next">Empiezas en expertise basico.</p>
+        </div>
+      </section>
+
+      <section class="profile-section" aria-label="Resumen de restaurantes visitados">
+        <div class="profile-section-header">
+          <div class="profile-section-heading">
+            <p class="profile-section-kicker">Resumen</p>
+            <h2 id="profile-restaurants-title">Tus ultimos restaurantes visitados</h2>
+          </div>
+
+          <a class="profile-section-link" id="profile-list-link" href="lista.html" hidden>Ir a mi lista</a>
+        </div>
+
+        <section class="profile-restaurant-grid" id="profile-restaurants-list"></section>
+      </section>
+
+      <section class="profile-section" id="profile-friends-section" aria-label="Amigos">
+        <div class="profile-section-header">
+          <div class="profile-section-heading">
+            <p class="profile-section-kicker">Amigos</p>
+            <h2 id="profile-friends-title">Tu circulo foodie</h2>
+          </div>
+
+          <button class="action-button profile-search-toggle" id="profile-search-toggle" type="button" hidden>
+            Buscar amigos
+          </button>
+        </div>
+
+        <section class="profile-friends-search" id="profile-friends-search" hidden>
+          <label class="searchbox" aria-label="Buscar amigos por nombre de perfil">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+            </svg>
+            <input id="profile-friend-search-input" type="text" placeholder="Busca por nombre de perfil">
+          </label>
+
+          <button class="action-button profile-search-button" id="profile-friend-search-button" type="button">
+            Buscar
+          </button>
+        </section>
+
+        <p class="profile-feedback" id="profile-friends-feedback" aria-live="polite"></p>
+        <section class="profile-search-results" id="profile-search-results" hidden></section>
+        <section class="profile-friends-grid" id="profile-friends-grid"></section>
+      </section>
+    </div>
+
+    <section class="bottom-panel profile-bottom-panel">
+      <nav class="bottom-nav" aria-label="Menu principal">
+        <a class="nav-item" href="deseados.html" aria-label="Deseados">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="lista.html" aria-label="Lista">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14v2H5V7Zm0 4h14v2H5v-2Zm0 4h14v2H5v-2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="index.html" aria-label="Inicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4.2 4 10.6V20h5.8v-5.2h4.4V20H20v-9.4L12 4.2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="recommendations.html" aria-label="Recomendaciones">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6h12v12H6V6Zm2 2v8h8V8H8Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item is-current" href="profile.html" aria-label="Perfil" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"></path>
+          </svg>
+        </a>
+      </nav>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

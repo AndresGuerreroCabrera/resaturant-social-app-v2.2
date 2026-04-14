@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Lista Publica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="friend-list-page light-page" data-page-theme="light">
+  <main class="friend-list-screen" data-friend-list-page>
+    <div class="friend-list-layout">
+      <header class="friend-list-topbar">
+        <a class="friend-list-back" id="friend-list-back" href="profile.html" aria-label="Volver al perfil">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+          </svg>
+          <span>Volver</span>
+        </a>
+
+        <div class="friend-list-heading">
+          <p class="profile-section-kicker">Lista publica</p>
+          <h1 id="friend-list-title">Restaurantes publicos</h1>
+          <p id="friend-list-copy">Aqui veras todos los restaurantes publicos de este perfil.</p>
+        </div>
+      </header>
+
+      <section class="filters-panel friend-filters-panel is-collapsed" aria-label="Filtros de la lista publica" data-filters-panel>
+        <button class="filters-toggle" type="button" aria-expanded="false" aria-controls="friend-filters-content" id="friend-filters-toggle">
+          <span class="section-kicker">
+            <span class="section-kicker-text">
+              <span class="filters-title">Filtros</span>
+              <span>Precio, estrellas, nombre o hashtags</span>
+            </span>
+          </span>
+          <span class="filters-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M7.4 9.4 12 14l4.6-4.6 1.4 1.4-6 6-6-6 1.4-1.4Z"></path>
+            </svg>
+          </span>
+        </button>
+
+        <div class="filters-content" id="friend-filters-content">
+          <div class="filter-stack">
+            <section class="filter-group" aria-label="Buscar restaurante">
+              <label class="searchbox" aria-label="Buscar restaurante por nombre">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                </svg>
+                <input id="friend-restaurant-search" type="text" placeholder="Buscar restaurante por nombre">
+              </label>
+            </section>
+
+            <section class="filter-group" aria-label="Filtro por precio">
+              <h3>Precio medio</h3>
+              <div class="filter-chip-row">
+                <button class="filter-chip is-active" type="button" data-price-filter="todos" aria-pressed="true">Todos</button>
+                <button class="filter-chip" type="button" data-price-filter="€" aria-pressed="false">€</button>
+                <button class="filter-chip" type="button" data-price-filter="€€" aria-pressed="false">€€</button>
+                <button class="filter-chip" type="button" data-price-filter="€€€" aria-pressed="false">€€€</button>
+              </div>
+            </section>
+
+            <section class="filter-group" aria-label="Filtro por puntuacion">
+              <h3>Estrellas</h3>
+              <div class="filter-chip-row rating-filter-row">
+                <button class="filter-chip is-active" type="button" data-rating-filter="todos" aria-pressed="true">Todos</button>
+                <button class="rating-star-button" type="button" data-rating-filter="1" aria-label="1 estrella" aria-pressed="false">&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="2" aria-label="2 estrellas" aria-pressed="false">&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="3" aria-label="3 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="4" aria-label="4 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;</button>
+                <button class="rating-star-button" type="button" data-rating-filter="5" aria-label="5 estrellas" aria-pressed="false">&#9733;&#9733;&#9733;&#9733;&#9733;</button>
+              </div>
+            </section>
+
+            <section class="filter-group" aria-label="Filtro por hashtags">
+              <h3>Hashtags</h3>
+              <div class="hashtag-searchbox">
+                <label class="searchbox hashtag-input-shell" aria-label="Anadir hashtag manualmente">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.5 4a6.5 6.5 0 1 0 4.03 11.6l4.43 4.44 1.41-1.41-4.44-4.43A6.5 6.5 0 0 0 10.5 4Z"></path>
+                  </svg>
+                  <input id="friend-hashtag-input" type="text" placeholder="Escribe un hashtag, por ejemplo burger" list="friend-hashtag-suggestions">
+                </label>
+                <button class="filter-chip hashtag-add-button" id="friend-add-hashtag-button" type="button">Anadir</button>
+                <datalist id="friend-hashtag-suggestions"></datalist>
+              </div>
+              <div class="selected-tags-row" id="friend-selected-hashtags"></div>
+              <div class="filter-chip-row" id="friend-hashtag-filters"></div>
+              <p class="filter-hint">Filtra por precio, nombre o hashtags del perfil publico.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="restaurants-summary" aria-live="polite">
+        <h2 id="friend-results-heading">Restaurantes publicos</h2>
+        <p id="friend-results-count">0 resultados</p>
+        <p class="list-feedback" id="friend-list-feedback" aria-live="polite"></p>
+      </section>
+
+      <section class="restaurants-list" id="friend-restaurants-list" aria-label="Listado publico del amigo"></section>
+    </div>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="friend-list.js"></script>
+</body>
+</html>

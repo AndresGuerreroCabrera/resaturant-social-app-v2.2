@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Recomendaciones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="recommendations-page dark-page" data-page-theme="dark">
+  <main class="recommendations-screen" data-recommendations-page>
+    <div class="recommendations-layout">
+      <section class="recommendations-topbar">
+        <div>
+          <p class="recommendations-kicker">Feed global</p>
+          <h1>Recomendaciones</h1>
+          <p class="recommendations-topbar-copy">Desliza para guardar o descartar. Las publicaciones se hacen desde tu lista.</p>
+        </div>
+      </section>
+
+      <section class="recommendations-stage" aria-label="Tarjeta principal de recomendacion">
+        <div class="recommendation-stack-count" id="recommendation-stack-count">0 recomendaciones</div>
+
+        <div class="recommendation-empty" id="recommendation-empty" hidden>
+          <h2>No quedan recomendaciones por ver</h2>
+          <p>Vuelve mas tarde o publica una nueva desde tu lista.</p>
+        </div>
+
+        <article class="recommendation-card" id="recommendation-card" hidden>
+          <div class="recommendation-swipe-indicator swipe-like">Guardar</div>
+          <div class="recommendation-swipe-indicator swipe-nope">Pasar</div>
+
+          <div class="recommendation-card-content">
+            <p class="recommendations-kicker">Recomendado por</p>
+            <h2 id="recommendation-restaurant-name">Nombre del restaurante</h2>
+            <p class="recommendation-owner" id="recommendation-owner-name">@usuario</p>
+            <p class="recommendation-address" id="recommendation-address">Direccion del restaurante</p>
+
+            <div class="recommendation-meta">
+              <section class="recommendation-meta-box">
+                <span class="meta-label">Precio medio</span>
+                <span class="price-badge" id="recommendation-price">€€</span>
+              </section>
+
+              <section class="recommendation-meta-box">
+                <span class="meta-label">Puntuacion</span>
+                <span class="rating-display" id="recommendation-rating">Sin puntuacion</span>
+              </section>
+
+              <section class="recommendation-meta-box">
+                <span class="meta-label">Hashtags</span>
+                <div class="tag-row" id="recommendation-hashtags"></div>
+              </section>
+
+              <section class="recommendation-meta-box recommendation-comment-box" id="recommendation-comment-box" hidden>
+                <span class="meta-label">Comentario</span>
+                <p class="restaurant-comment recommendation-comment" id="recommendation-comment"></p>
+              </section>
+            </div>
+          </div>
+        </article>
+
+        <p class="recommendation-hint">Desliza a la derecha para guardar en deseados o a la izquierda para rechazar.</p>
+      </section>
+    </div>
+
+    <section class="bottom-panel recommendations-bottom-panel">
+      <nav class="bottom-nav" aria-label="Menu principal">
+        <a class="nav-item" href="deseados.html" aria-label="Deseados">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14.7 5.3 8 12l6.7 6.7-1.4 1.4L5.2 12l8.1-8.1 1.4 1.4Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="lista.html" aria-label="Lista">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 7h14v2H5V7Zm0 4h14v2H5v-2Zm0 4h14v2H5v-2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="index.html" aria-label="Inicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4.2 4 10.6V20h5.8v-5.2h4.4V20H20v-9.4L12 4.2Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item is-current" href="recommendations.html" aria-label="Recomendaciones" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6h12v12H6V6Zm2 2v8h8V8H8Z"></path>
+          </svg>
+        </a>
+        <a class="nav-item" href="profile.html" aria-label="Perfil">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"></path>
+          </svg>
+        </a>
+      </nav>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="recommendations.js"></script>
+</body>
+</html>

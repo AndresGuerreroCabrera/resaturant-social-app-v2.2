@@ -1,0 +1,76 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/apps/legacy-web/index.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/apps/legacy-web/index.html"
+    },
+    {
+      "source": "/auth.html",
+      "destination": "/apps/legacy-web/auth.html"
+    },
+    {
+      "source": "/deseados.html",
+      "destination": "/apps/legacy-web/deseados.html"
+    },
+    {
+      "source": "/friend-list.html",
+      "destination": "/apps/legacy-web/friend-list.html"
+    },
+    {
+      "source": "/lista.html",
+      "destination": "/apps/legacy-web/lista.html"
+    },
+    {
+      "source": "/profile.html",
+      "destination": "/apps/legacy-web/profile.html"
+    },
+    {
+      "source": "/recommendations.html",
+      "destination": "/apps/legacy-web/recommendations.html"
+    },
+    {
+      "source": "/auth.js",
+      "destination": "/apps/legacy-web/auth.js"
+    },
+    {
+      "source": "/database.js",
+      "destination": "/apps/legacy-web/database.js"
+    },
+    {
+      "source": "/deseados.js",
+      "destination": "/apps/legacy-web/deseados.js"
+    },
+    {
+      "source": "/friend-list.js",
+      "destination": "/apps/legacy-web/friend-list.js"
+    },
+    {
+      "source": "/lista.js",
+      "destination": "/apps/legacy-web/lista.js"
+    },
+    {
+      "source": "/profile.js",
+      "destination": "/apps/legacy-web/profile.js"
+    },
+    {
+      "source": "/recommendations.js",
+      "destination": "/apps/legacy-web/recommendations.js"
+    },
+    {
+      "source": "/script.js",
+      "destination": "/apps/legacy-web/script.js"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/apps/legacy-web/styles.css"
+    },
+    {
+      "source": "/vercel-analytics.js",
+      "destination": "/apps/legacy-web/vercel-analytics.js"
+    }
+  ]
+}

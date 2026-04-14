@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savory Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page light-page" data-page-theme="light">
+  <main class="auth-screen" data-auth-page>
+    <section class="auth-card">
+      <a class="auth-back-link" href="index.html">Volver</a>
+
+      <header class="auth-hero">
+        <p class="auth-kicker">Acceso</p>
+        <h1>Log in o sign up</h1>
+        <p>Entra con tu cuenta o crea una nueva en unos segundos.</p>
+      </header>
+
+      <section class="segmented-switch segmented-switch-2 auth-mode-switch" aria-label="Modo de acceso" data-active-index="0">
+        <button class="switch-option is-active" type="button" data-index="0" data-auth-mode="login" aria-pressed="true">Log In</button>
+        <button class="switch-option" type="button" data-index="1" data-auth-mode="signup" aria-pressed="false">Sign Up</button>
+      </section>
+
+      <form class="auth-form" id="auth-form">
+        <label class="auth-field">
+          <span>Nombre de usuario</span>
+          <input id="auth-username" type="text" placeholder="Tu nombre de usuario" autocomplete="username">
+        </label>
+
+        <label class="auth-field">
+          <span>Contrasena</span>
+          <input id="auth-password" type="password" placeholder="Tu contrasena" autocomplete="current-password">
+        </label>
+
+        <label class="auth-field auth-signup-email-field" id="auth-email-field" hidden>
+          <span>Correo electronico</span>
+          <input id="auth-email" type="email" placeholder="tu@email.com" autocomplete="email" inputmode="email" spellcheck="false">
+        </label>
+
+        <section class="auth-signup-only" id="signup-only-fields" hidden>
+          <div class="auth-field">
+            <span>Elige avatar</span>
+            <div class="avatar-choice-grid" id="avatar-choice-grid">
+              <button class="avatar-choice is-active" type="button" data-avatar-choice="chef" aria-pressed="true">
+                <span class="avatar-badge" data-avatar-style="chef" aria-hidden="true"></span>
+                <span>Chef</span>
+              </button>
+              <button class="avatar-choice" type="button" data-avatar-choice="pizza" aria-pressed="false">
+                <span class="avatar-badge" data-avatar-style="pizza" aria-hidden="true"></span>
+                <span>Pizza</span>
+              </button>
+              <button class="avatar-choice" type="button" data-avatar-choice="burger" aria-pressed="false">
+                <span class="avatar-badge" data-avatar-style="burger" aria-hidden="true"></span>
+                <span>Burger</span>
+              </button>
+              <button class="avatar-choice" type="button" data-avatar-choice="candy" aria-pressed="false">
+                <span class="avatar-badge" data-avatar-style="candy" aria-hidden="true"></span>
+                <span>Candy</span>
+              </button>
+              <button class="avatar-choice" type="button" data-avatar-choice="taco" aria-pressed="false">
+                <span class="avatar-badge" data-avatar-style="taco" aria-hidden="true"></span>
+                <span>Taco</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <p class="auth-message" id="auth-message" aria-live="polite"></p>
+        <button class="auth-submit-button" id="auth-submit-button" type="submit">Entrar</button>
+      </form>
+
+      <section class="current-user-card" id="current-user-card" hidden>
+        <div class="current-user-copy">
+          <span class="auth-kicker">Sesion activa</span>
+          <div class="current-user-row">
+            <span class="avatar-badge" data-user-avatar data-avatar-style="chef" aria-hidden="true"></span>
+            <div>
+              <strong data-current-username>Invitado</strong>
+              <p>Tu avatar actual y tu sesion se guardan en Supabase.</p>
+            </div>
+          </div>
+        </div>
+        <button class="auth-logout-button" id="auth-logout-button" type="button">Cerrar sesion</button>
+      </section>
+    </section>
+  </main>
+  <script src="vercel-analytics.js"></script>
+  <script src="database.js"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

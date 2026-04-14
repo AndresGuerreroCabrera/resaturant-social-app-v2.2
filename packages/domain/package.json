@@ -1,0 +1,19 @@
+{
+  "name": "@savory/domain",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./identity": "./src/identity.ts",
+    "./profiles": "./src/profiles.ts",
+    "./places": "./src/places.ts",
+    "./user-place": "./src/user-place.ts",
+    "./friendships": "./src/friendships.ts",
+    "./recommendations": "./src/recommendations.ts",
+    "./reputation": "./src/reputation.ts",
+    "./feed": "./src/feed.ts",
+    "./primitives": "./src/primitives.ts"
+  }
+}
