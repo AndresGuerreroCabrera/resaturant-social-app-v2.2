@@ -459,8 +459,9 @@ Pasar la escritura real a v2 sin romper el legado.
 
 - freeze temporal de escrituras legacy
 - backfill final
-- activacion movil/API
-- legacy en read-only o deprecado
+- activacion de `apps/api` como write boundary real
+- rollout posterior de clientes nuevos
+- legacy en freeze temporal y luego deprecado
 
 **Afecta**
 
@@ -478,6 +479,22 @@ Pasar la escritura real a v2 sin romper el legado.
 
 - v2 es la unica fuente de escritura
 - legacy deja de mandar sobre datos
+
+**Notas de diseno (2026-04-15)**
+
+- se cerro la estrategia de cutover en `docs/adr/010-cutover-strategy.md`
+- se documento el runbook operativo en `docs/cutover/cutover-runbook.md`
+- el corte queda dividido en dos etapas:
+  - cambio del sistema de verdad a `app` via `apps/api`
+  - rollout posterior de clientes nuevos, incluida `apps/mobile`
+- se confirma de forma explicita que no habra dual-write prolongado
+- se confirma de forma explicita que el legacy no seguira como cliente funcional read-only sobre `public` despues del corte; pasara a `deprecation`
+- `public` queda como referencia historica y ancla de rollback limitada durante al menos 30 dias
+- la fase queda iniciada a nivel de decision y runbook, pero sigue bloqueada por:
+  - rehearsal real del backfill
+  - runtime productivo de `apps/api`
+  - mecanismos reales de freeze/deprecation en el legacy
+  - rollout real de cliente nuevo
 
 ---
 
@@ -551,4 +568,4 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
 - [ ] Fase 7 - no iniciada
 - [ ] Fase 8 - iniciada el 2026-04-15 con schema `backfill`, scripts SQL de backfill y runbook; rehearsal real y validacion en staging pendientes
-- [ ] Fase 9 - no iniciada
+- [ ] Fase 9 - iniciada el 2026-04-15 a nivel de ADR y runbook; rehearsal completo, freeze real y ejecucion de produccion pendientes

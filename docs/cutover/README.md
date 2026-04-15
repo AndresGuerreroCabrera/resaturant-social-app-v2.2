@@ -5,10 +5,15 @@ Este directorio queda reservado para documentacion operativa de migracion y paso
 Estado actual:
 
 - ya existe `backfill-runbook.md`
-- sigue pendiente el `cutover-runbook.md` final
+- ya existe `cutover-runbook.md`
 
-Mas adelante iran aqui:
+En este directorio quedan:
 
-- cutover runbook
 - validaciones pre y post migracion
 - rollback
+- notas operativas del freeze final
+
+Orden recomendado:
+
+1. `backfill-runbook.md`
+2. `cutover-runbook.md`

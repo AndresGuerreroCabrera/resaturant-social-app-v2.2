@@ -15,16 +15,17 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 7. `adr/007-backend-commands.md`
 8. `adr/008-recommendations-and-reputation.md`
 9. `adr/009-outbox-and-jobs.md`
-10. `planning/migration-phases.md`
-11. `planning/backend-commands-implementation.md`
-12. `planning/async-processing.md`
-13. `planning/sql-migrations-v2.md`
-14. `planning/contracts-and-domain-packages.md`
-15. `planning/repo-reorganization.md`
-16. `planning/repo-bootstrap.md`
-17. `planning/backfill-plan.md`
-18. `cutover/backfill-runbook.md`
-19. `cutover/cutover-runbook.md` *(cuando exista)*
+10. `adr/010-cutover-strategy.md`
+11. `planning/migration-phases.md`
+12. `planning/backend-commands-implementation.md`
+13. `planning/async-processing.md`
+14. `planning/sql-migrations-v2.md`
+15. `planning/contracts-and-domain-packages.md`
+16. `planning/repo-reorganization.md`
+17. `planning/repo-bootstrap.md`
+18. `planning/backfill-plan.md`
+19. `cutover/backfill-runbook.md`
+20. `cutover/cutover-runbook.md`
 
 ## Que contiene cada carpeta
 
@@ -88,6 +89,7 @@ Aqui van:
 - `adr/007-backend-commands.md`
 - `adr/008-recommendations-and-reputation.md`
 - `adr/009-outbox-and-jobs.md`
+- `adr/010-cutover-strategy.md`
 
 ### Fuente de verdad operativa
 
@@ -99,6 +101,7 @@ Aqui van:
 - `planning/repo-bootstrap.md`
 - `planning/backfill-plan.md`
 - `cutover/backfill-runbook.md`
+- `cutover/cutover-runbook.md`
 
 ## Reglas para futuras sesiones
 
@@ -125,7 +128,8 @@ Estado de documentacion actualizado tras:
 - refuerzo del slice social de recomendaciones, reacciones y reputacion en `adr/008-recommendations-and-reputation.md`
 - base asincrona durable de outbox y polling en `adr/009-outbox-and-jobs.md`
 - implementacion del soporte de backfill v1 -> v2 con schema `backfill`, scripts SQL reejecutables y runbook operativo
+- cierre de la estrategia de cutover con dos etapas, freeze corto y legado deprecado tras el cambio de sistema de verdad
 
 Proximo paso recomendado:
 
-- ensayar el backfill en staging con reconciliacion real y, en paralelo, cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y handlers/worker reales
+- cablear el runtime real de `apps/api`, implementar los mecanismos de `cutover_freeze`/`deprecation` del legacy y ensayar en staging tanto el backfill como el runbook completo de cutover
