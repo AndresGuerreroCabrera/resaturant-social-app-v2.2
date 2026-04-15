@@ -319,6 +319,26 @@ Motivo:
 - la reputacion visible si es publica
 - la tabla base no debe abrirse directamente porque es un agregado operativo
 
+### `app.outbox_events`
+
+Lectura directa:
+
+- `authenticated`: no
+
+Escritura directa:
+
+- `authenticated`: no
+- `service_role`: si
+
+Columnas sensibles:
+
+- toda la tabla
+
+Motivo:
+
+- contiene payloads internos, errores operativos y metadata de retry
+- no es superficie de producto ni SQL publica
+
 ### `app.public_profile_stats_v`
 
 Lectura directa:
@@ -348,6 +368,7 @@ Motivo:
 | `app.recommendation_reactions` | solo propias filas | no | no |
 | `app.reputation_events` | no | no | no |
 | `app.reputation_summaries` | no | no | `app.public_profile_stats_v` |
+| `app.outbox_events` | no | no | no |
 
 ## Columnas y datos que no deben exponerse nunca por acceso SQL directo publico
 
@@ -361,6 +382,7 @@ Motivo:
 - `app.recommendation_posts.removed_at`
 - `app.reputation_events.*`
 - `app.reputation_summaries.*`
+- `app.outbox_events.*`
 
 ## Implementacion tecnica cerrada
 
@@ -369,6 +391,7 @@ La implementacion v2 aplica estas decisiones:
 - `anon` sin acceso directo al schema `app`
 - `authenticated` con `select` explicito solo en tablas y vistas autorizadas
 - todas las tablas base core con RLS activada
+- `app.outbox_events` tambien con RLS activada y sin politicas de cliente
 - politicas de lectura minima:
   - `public_profiles`: todas las filas
   - `private_profiles`: fila propia
@@ -435,4 +458,5 @@ La siguiente fase debe cerrar:
 
 - runtime real de `apps/api` sobre estos comandos
 - adaptadores de persistencia sobre `schema app`
+- adaptadores y worker reales del outbox cerrado a cliente
 - si hace falta alguna vista adicional para lectura segura del backend o del backfill

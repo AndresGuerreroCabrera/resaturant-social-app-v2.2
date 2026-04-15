@@ -23,7 +23,7 @@ import type {
   Visibility
 } from "@savory/domain";
 
-import type { SocialOutboxEvent } from "./outbox-events";
+import type { OutboxWriter } from "../async/ports";
 
 export interface AuthUsersStore {
   userExists(userId: AuthUserId): Promise<boolean>;
@@ -186,10 +186,6 @@ export interface ReputationStore {
   }): Promise<AcceptedRecommendationReputationMutation>;
 }
 
-export interface OutboxStore {
-  enqueue(events: readonly SocialOutboxEvent[]): Promise<void>;
-}
-
 export interface BackendCommandTransaction {
   authUsers: AuthUsersStore;
   places: PlacesStore;
@@ -198,7 +194,7 @@ export interface BackendCommandTransaction {
   recommendations: RecommendationsStore;
   friendships: FriendshipsStore;
   reputation: ReputationStore;
-  outbox: OutboxStore;
+  outbox: OutboxWriter;
 }
 
 export interface BackendCommandTransactionRunner {

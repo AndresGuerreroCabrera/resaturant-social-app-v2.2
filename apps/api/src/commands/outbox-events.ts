@@ -17,12 +17,21 @@ export const BACKEND_OUTBOX_EVENT_TYPES = [
 export type BackendOutboxEventType =
   (typeof BACKEND_OUTBOX_EVENT_TYPES)[number];
 
+export const BACKEND_OUTBOX_AGGREGATE_TYPES = [
+  "recommendation_post",
+  "recommendation_reaction",
+  "reputation_event"
+] as const;
+
+export type BackendOutboxAggregateType =
+  (typeof BACKEND_OUTBOX_AGGREGATE_TYPES)[number];
+
 export type RecommendationResponseEntryAction =
   RespondToRecommendationResponse["entryAction"];
 
 export interface BackendOutboxEvent<TType extends BackendOutboxEventType, TPayload> {
   type: TType;
-  aggregateType: "recommendation_post" | "recommendation_reaction" | "reputation_event";
+  aggregateType: BackendOutboxAggregateType;
   aggregateId: string;
   occurredAt: IsoDateTimeString;
   payload: TPayload;

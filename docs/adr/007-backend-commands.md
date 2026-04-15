@@ -93,6 +93,9 @@ La primera capa de comandos se implementa con:
 - `apps/api/src/commands/errors.ts`
 - `apps/api/src/commands/catalog.ts`
 - `apps/api/src/commands/outbox-events.ts`
+- `apps/api/src/async/types.ts`
+- `apps/api/src/async/ports.ts`
+- `apps/api/src/async/worker.ts`
 - un archivo por comando de negocio
 
 Los puertos representan dependencias del runtime futuro:
@@ -459,7 +462,7 @@ La capa actual fija estos codigos base:
 - runtime HTTP real
 - wiring de auth/JWT
 - adaptadores concretos a Supabase/Postgres
-- persistencia duradera y delivery del outbox
+- delivery real del outbox
 - query side del feed y de perfiles publicos
 - formula final de reputacion y thresholds de expertise
 - moderacion de recomendaciones
@@ -501,6 +504,7 @@ La siguiente fase si debe cerrar:
 
 - runtime real de `apps/api`
 - adaptadores de base de datos sobre `schema app`
+- runtime y adaptadores del worker asincrono
 - mapeo de errores a respuestas HTTP
 - query side para feed, perfil publico y lectura de listas
 - estrategia de tests para esta capa

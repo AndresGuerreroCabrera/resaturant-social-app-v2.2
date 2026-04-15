@@ -166,6 +166,7 @@ Decision cerrada:
 
 - el outbox es infraestructura operativa, no entidad canonica del producto
 - el comando lo escribe dentro de la misma transaccion del cambio de dominio
+- su persistencia durable ya existe en `app.outbox_events`
 - su consumo y entrega real quedan fuera de este ADR
 
 ## Reparto de responsabilidades
@@ -219,7 +220,7 @@ Ventaja:
 
 Coste:
 
-- exige soporte de adaptador o persistencia duradera en la siguiente fase
+- exige soporte de adaptador SQL real y runtime del worker en la siguiente fase
 
 ### Lock explicito en reaccion
 
@@ -245,8 +246,6 @@ Coste:
 
 ## Decisiones diferidas
 
-- tabla fisica exacta del outbox y su esquema SQL
-- worker o job que consuma el outbox
 - politica de reintentos y deduplicacion de entrega
 - formula final de `score` y thresholds de `expertise_level_label`
 - runtime HTTP real y adaptadores concretos
@@ -255,7 +254,7 @@ Coste:
 
 ### Estado actual del repo vs arquitectura final
 
-1. El slice social del backend ya emite eventos internos de outbox en `apps/api`, pero todavia no existe persistencia duradera cableada a base real.
+1. El slice social del backend ya emite eventos internos y la base durable del outbox ya existe, pero todavia no hay adaptador SQL real ni runtime que los procese.
 2. El legacy sigue publicando y reaccionando fuera de este flujo porque sigue acoplado a Supabase desde cliente.
 
 Estas contradicciones son temporales y conocidas.
@@ -265,8 +264,7 @@ No se corrigen en esta fase para no romper el sistema legacy ni mezclarla con ru
 
 La siguiente fase debe cerrar:
 
-- adaptadores concretos de `RecommendationsStore`, `ReputationStore` y `OutboxStore`
+- adaptadores concretos de `RecommendationsStore`, `ReputationStore`, `OutboxWriter` y `AsyncJobsStore`
 - lock SQL real para cuota y respuesta
-- persistencia duradera del outbox
 - consumo del outbox por jobs o notificaciones
 - transporte HTTP y auth real sobre estos comandos

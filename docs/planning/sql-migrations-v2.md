@@ -40,14 +40,27 @@ Incluye:
   - `app.public_recommendation_posts_v`
 - endurecimiento de `app.public_profile_stats_v` como proyeccion publica segura
 
+### 4. `20260415143000_create_app_outbox_events.sql`
+
+Incluye:
+
+- enums operativos del outbox
+- tabla `app.outbox_events`
+- metadata de estado, retry, scheduling y lease
+- indices para polling y trazabilidad
+- cierre de acceso directo a cliente autenticado
+- RLS activada sin politicas de cliente
+
 ## Orden
 
 1. aplicar `20260414193000_create_app_schema_v2.sql`
 2. aplicar `20260414194000_create_app_public_profile_stats_view.sql`
 3. aplicar `20260414200000_configure_app_security_and_rls.sql`
+4. aplicar `20260415143000_create_app_outbox_events.sql`
 
 La segunda depende de la primera.
 La tercera depende de ambas.
+La cuarta depende del schema `app` y de la estrategia de seguridad ya fijada.
 
 ## Como aplicarlas
 
@@ -70,10 +83,12 @@ En local o en el entorno que se use para versionar Supabase:
    - `app.public_places_v`
    - `app.public_visited_entries_v`
    - `app.public_recommendation_posts_v`
+   - `app.outbox_events`
 4. verificar que:
    - `anon` no puede leer `app.*`
    - `authenticated` solo puede leer las superficies explicitamente abiertas
    - no existe escritura directa de `authenticated` sobre tablas core
+   - `authenticated` no puede leer ni escribir `app.outbox_events`
 
 ## Conflictos potenciales
 
@@ -114,6 +129,15 @@ Esto es deliberado y coherente con el boundary `apps/api`, pero puede sorprender
 `app.public_places_v`, `app.public_visited_entries_v`, `app.public_recommendation_posts_v` y `app.public_profile_stats_v` pasan a ser la superficie SQL de lectura publica controlada.
 Si se cambia su shape, hay que tratarlo como cambio de contrato de lectura.
 
+### 8. Outbox durable
+
+`app.outbox_events` es infraestructura operativa y no superficie publica.
+
+Consecuencias:
+
+- los comandos pueden persistir side effects sin bloquearse con delivery real
+- el worker futuro necesitara un claim SQL atomico coherente con `status`, `next_run_at` y `lease_expires_at`
+
 ## Que quedo fuera deliberadamente
 
 - baseline del schema legacy `public`
@@ -121,8 +145,9 @@ Si se cambia su shape, hay que tratarlo como cambio de contrato de lectura.
 - funciones SQL de comandos de dominio
 - enforcement SQL final del limite semanal de recomendaciones
 - media assets
-- notifications y push
 - feed materializado
+- push notifications reales
+- media processing real
 
 ## Que sigue fuera tras esta fase
 
@@ -142,5 +167,6 @@ Si se cambia su shape, hay que tratarlo como cambio de contrato de lectura.
 
 1. cablear el runtime real de `apps/api` sobre la capa de comandos ya implementada
 2. implementar adaptadores de persistencia y transaccion para `schema app`
-3. decidir si alguna garantia adicional conviene como funcion SQL puntual
-4. preparar el baseline legacy y el plan de backfill
+3. implementar el adapter SQL del outbox y el worker de polling real
+4. decidir si alguna garantia adicional conviene como funcion SQL puntual
+5. preparar el baseline legacy y el plan de backfill

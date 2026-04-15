@@ -89,6 +89,16 @@ En el refuerzo posterior del core social se cerro explicitamente:
 Estos eventos no forman parte del contrato publico de `apps/api`.
 Quedan como costura interna para notificaciones o jobs futuros.
 
+## Base asincrona anadida despues
+
+La fase posterior anadio:
+
+- migracion SQL durable para `app.outbox_events`
+- `apps/api/src/async` con puertos, tipos y worker de polling base
+
+Con esto ya no queda pendiente la **base durable** del outbox.
+Lo que sigue pendiente es su adapter real, su runtime y sus handlers concretos.
+
 ## Como queda repartida la logica
 
 ### Validacion de payload
@@ -113,7 +123,7 @@ Quedan como costura interna para notificaciones o jobs futuros.
 - runtime HTTP real en `apps/api`
 - auth/JWT y actor context real
 - adaptadores de base de datos que implementen `ports.ts`
-- persistencia duradera y consumo del outbox
+- consumo real del outbox
 - query side del feed
 - query side de perfiles publicos y listas visibles
 - mapeo de errores de negocio a status HTTP
@@ -129,7 +139,7 @@ Hace falta cerrar:
 - bootstrap real del framework de API
 - cliente/driver a Supabase o Postgres desde backend
 - implementaciones concretas de `BackendCommandTransactionRunner` y stores
-- implementacion concreta de `OutboxStore`
+- implementacion concreta de `OutboxWriter` y `AsyncJobsStore`
 - politica de logging y observabilidad minima
 
 ### Antes de considerar completa la fase de producto
@@ -147,4 +157,4 @@ Hace falta cerrar:
 - la capa de comandos existe, pero aun no corre sobre una base real
 - no se ejecuto typecheck ni test de runtime en esta fase
 - las reglas criticas ya estan fuera del frontend a nivel de diseno e implementacion de backend, pero todavia no estan cableadas a transporte real
-- el outbox interno ya se emite desde comandos sociales, pero aun no tiene backing duradero ni consumidores reales
+- el outbox interno ya tiene base durable, pero aun no tiene adapter real ni consumidores reales

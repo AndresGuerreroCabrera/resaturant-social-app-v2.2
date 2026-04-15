@@ -533,6 +533,18 @@ Decision:
 - el feed de recomendaciones se resolvera con query o vista ligera sobre `recommendation_posts`, `public_profiles`, `places`, `reputation_summaries` y el estado de reaccion del viewer
 - no se introduce `activity_event` ni un feed materializado general en esta fase
 
+## Infraestructura operativa posterior
+
+### `app.outbox_events`
+
+No forma parte del core canonico del dominio.
+
+Decision posterior:
+
+- el schema `app` tambien aloja una tabla operativa de outbox durable
+- se documenta en detalle en `009-outbox-and-jobs.md`
+- existe para desacoplar side effects asincronos sin sacar la transaccion fuera de Postgres
+
 ## Constraints que protegen invariantes clave
 
 ### Protegidos directamente por SQL

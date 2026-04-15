@@ -20,7 +20,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - repositorio ya reorganizado como workspace ligero
 - `apps/legacy-web` es el unico sistema de producto operativo hoy
 - `apps/api` ya contiene una capa de comandos de backend sin runtime HTTP real
-- el slice social de `apps/api` ya emite outbox interno, pero todavia sin backing duradero ni jobs
+- `apps/api` ya contiene una base asincrona interna de outbox/polling, pero todavia sin runtime ni handlers reales
 - `apps/mobile` sigue existiendo solo como preparacion estructural
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
@@ -275,6 +275,13 @@ Tener una API real lista para crecer.
 - se ajustaron contratos compartidos para separar recomendaciones publicas frente a DTOs del propietario
 - `apps/api` sigue sin runtime HTTP, auth real y adaptadores de persistencia
 
+**Notas de refuerzo (2026-04-15)**
+
+- se implemento una base asincrona simple para side effects con `app.outbox_events` y `apps/api/src/async`
+- la estrategia elegida es outbox durable + polling worker interno
+- la persistencia durable del outbox ya no queda pendiente
+- siguen pendientes los adapters SQL reales, los handlers de eventos y el runtime que ejecute el polling
+
 ---
 
 ## Fase 5 - Nucleo de listas personales
@@ -520,9 +527,9 @@ No construir `apps/mobile` antes de tener:
 - [x] Fase 1 - completada a nivel de repositorio el 2026-04-14; validacion manual pendiente
 - [ ] Fase 2 - iniciada el 2026-04-14; migraciones v2 creadas, baseline legacy y estrategia de versionado pendientes
 - [ ] Fase 3 - iniciada el 2026-04-14; dominio, ADR SQL, migraciones v2 y RLS cerrados, baseline legacy y funciones SQL puntuales pendientes
-- [ ] Fase 4 - iniciada el 2026-04-14 con contratos compartidos y capa de comandos; runtime `apps/api`, auth y adaptadores pendientes
+- [ ] Fase 4 - iniciada el 2026-04-14 y reforzada el 2026-04-15 con base asincrona durable; runtime `apps/api`, auth, adaptadores y handlers pendientes
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
-- [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, backing duradero del outbox y runtime siguen pendientes
+- [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
 - [ ] Fase 7 - no iniciada
 - [ ] Fase 8 - no iniciada
 - [ ] Fase 9 - no iniciada

@@ -6,6 +6,7 @@ Estado actual:
 
 - `supabase/migrations/` ya contiene migraciones iniciales del schema v2 en `app`
 - esas migraciones ya incluyen seguridad/RLS y vistas seguras de lectura
+- el schema `app` ya incluye la base durable de outbox en `app.outbox_events`
 - sigue sin existir baseline versionado del schema legacy `public`
 - `supabase/seed/` existe pero aun no contiene datos semilla
 

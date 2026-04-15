@@ -14,14 +14,16 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 6. `adr/006-security-and-rls.md`
 7. `adr/007-backend-commands.md`
 8. `adr/008-recommendations-and-reputation.md`
-9. `planning/migration-phases.md`
-10. `planning/backend-commands-implementation.md`
-11. `planning/sql-migrations-v2.md`
-12. `planning/contracts-and-domain-packages.md`
-13. `planning/repo-reorganization.md`
-14. `planning/repo-bootstrap.md`
-15. `planning/backfill-plan.md` *(cuando exista)*
-16. `cutover/cutover-runbook.md` *(cuando exista)*
+9. `adr/009-outbox-and-jobs.md`
+10. `planning/migration-phases.md`
+11. `planning/backend-commands-implementation.md`
+12. `planning/async-processing.md`
+13. `planning/sql-migrations-v2.md`
+14. `planning/contracts-and-domain-packages.md`
+15. `planning/repo-reorganization.md`
+16. `planning/repo-bootstrap.md`
+17. `planning/backfill-plan.md` *(cuando exista)*
+18. `cutover/cutover-runbook.md` *(cuando exista)*
 
 ## Que contiene cada carpeta
 
@@ -84,11 +86,13 @@ Aqui van:
 - `adr/006-security-and-rls.md`
 - `adr/007-backend-commands.md`
 - `adr/008-recommendations-and-reputation.md`
+- `adr/009-outbox-and-jobs.md`
 
 ### Fuente de verdad operativa
 
 - `planning/migration-phases.md`
 - `planning/backend-commands-implementation.md`
+- `planning/async-processing.md`
 - `planning/sql-migrations-v2.md`
 - `planning/contracts-and-domain-packages.md`
 - `planning/repo-bootstrap.md`
@@ -116,7 +120,8 @@ Estado de documentacion actualizado tras:
 - cierre de la politica de seguridad y RLS v2 en `adr/006-security-and-rls.md`
 - implementacion de la capa de comandos backend del core inicial en `apps/api`
 - refuerzo del slice social de recomendaciones, reacciones y reputacion en `adr/008-recommendations-and-reputation.md`
+- base asincrona durable de outbox y polling en `adr/009-outbox-and-jobs.md`
 
 Proximo paso recomendado:
 
-- cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y backing duradero del outbox sobre la capa de comandos ya cerrada
+- cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y handlers/worker reales sobre la base asincrona ya cerrada
