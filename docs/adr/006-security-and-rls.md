@@ -80,13 +80,13 @@ Ninguna tabla core de `app` permite escrituras directas desde `authenticated`.
 Motivo:
 
 - el boundary oficial es `apps/api`
-- todavia faltan comandos transaccionales de dominio
+- la escritura de dominio ya se concentra en comandos backend, no en cliente
 - permitir escrituras directas ahora reabriria el mismo acoplamiento que existe en el legacy
 
 Consecuencia:
 
 - incluso un propietario legitimo no actualiza su fila directamente por SQL cliente
-- esas operaciones se resolveran en la fase de comandos/backend
+- esas operaciones se resuelven o se resolveran a traves de `apps/api`
 
 ## Superficies publicas seguras
 
@@ -423,17 +423,16 @@ No se corrigen en esta fase para no romper el legacy.
 
 ### Contratos compartidos vs proyecciones publicas SQL
 
-`packages/contracts/src/recommendations.ts` sigue usando un `RecommendationPostDto` amplio con `sourceEntryId` y `removedAt`.
+La contradiccion original quedo resuelta en la fase de comandos backend:
 
-Eso no invalida este ADR, pero si deja un ajuste pendiente:
-
-- separar DTOs publicos de feed/perfil frente a DTOs internos o del propio autor en la fase de `apps/api`
+- `packages/contracts` ya separa `publicRecommendationPostDto` y `ownedRecommendationPostDto`
+- el feed usa el DTO publico
+- los comandos del autor pueden seguir usando el DTO de propietario
 
 ## Consecuencia practica para la siguiente fase
 
-La fase de comandos/backend debe cerrar:
+La siguiente fase debe cerrar:
 
-- como lee y escribe `apps/api` sobre tablas ahora cerradas a cliente
-- comandos transaccionales para perfil, user-place, recomendaciones, reacciones y reputacion
-- DTOs publicos frente a DTOs propietarios donde hoy aun hay shapes demasiado amplias
+- runtime real de `apps/api` sobre estos comandos
+- adaptadores de persistencia sobre `schema app`
 - si hace falta alguna vista adicional para lectura segura del backend o del backfill

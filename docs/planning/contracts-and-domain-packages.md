@@ -123,6 +123,7 @@ No debe:
 - `hidden` se representa como ocultacion separada del `status`, no como tercer estado
 - el limite semanal de recomendaciones se fija como constante de dominio
 - la recomendacion social es entidad propia con snapshot publicado
+- los contratos ya separan DTO publico y DTO del propietario para recomendaciones
 - la amistad sigue siendo simetrica
 - el feed se trata como read model derivado
 

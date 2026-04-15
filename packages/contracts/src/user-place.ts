@@ -10,7 +10,11 @@ import {
   tagListSchema,
   visibilitySchema
 } from "./common";
-import { placeDtoSchema, placeSelectionInputSchema } from "./places";
+import {
+  placeDtoSchema,
+  placeResolutionSchema,
+  placeSelectionInputSchema
+} from "./places";
 
 const userPlaceEntryBaseDtoSchema = z.object({
   id: entityIdSchema,
@@ -59,6 +63,8 @@ export const upsertWishlistEntryCommandSchema = z.object({
   isHidden: z.boolean().optional()
 });
 
+export const savePlaceToWishlistCommandSchema = upsertWishlistEntryCommandSchema;
+
 export const createVisitedEntryCommandSchema = z.object({
   place: placeSelectionInputSchema,
   visibility: visibilitySchema,
@@ -69,6 +75,27 @@ export const createVisitedEntryCommandSchema = z.object({
   priceTier: priceTierSchema.optional(),
   isHidden: z.boolean().optional()
 });
+
+const markPlaceVisitedBaseCommandSchema = z.object({
+  visibility: visibilitySchema,
+  visitedAt: isoDateTimeSchema.optional(),
+  rating: ratingSchema.optional(),
+  note: nullableTextSchema.optional(),
+  tags: tagListSchema.optional(),
+  priceTier: priceTierSchema.optional(),
+  isHidden: z.boolean().optional()
+});
+
+export const markPlaceVisitedCommandSchema = z.discriminatedUnion("target", [
+  markPlaceVisitedBaseCommandSchema.extend({
+    target: z.literal("place"),
+    place: placeSelectionInputSchema
+  }),
+  markPlaceVisitedBaseCommandSchema.extend({
+    target: z.literal("entry"),
+    userPlaceEntryId: entityIdSchema
+  })
+]);
 
 export const promoteWishlistToVisitedCommandSchema = z.object({
   userPlaceEntryId: entityIdSchema,
@@ -99,6 +126,36 @@ export const userPlaceEntriesResponseSchema = z.object({
   entries: z.array(userPlaceEntryDtoSchema)
 });
 
+export const WISHLIST_MUTATION_ACTION_VALUES = [
+  "created_wishlist",
+  "updated_wishlist",
+  "kept_existing_visited"
+] as const;
+export const wishlistMutationActionSchema = z.enum(
+  WISHLIST_MUTATION_ACTION_VALUES
+);
+
+export const VISITED_MUTATION_ACTION_VALUES = [
+  "created_visited",
+  "promoted_from_wishlist",
+  "updated_visited"
+] as const;
+export const visitedMutationActionSchema = z.enum(
+  VISITED_MUTATION_ACTION_VALUES
+);
+
+export const savePlaceToWishlistResponseSchema = z.object({
+  entry: userPlaceEntryDtoSchema,
+  action: wishlistMutationActionSchema,
+  placeResolution: placeResolutionSchema
+});
+
+export const markPlaceVisitedResponseSchema = z.object({
+  entry: userPlaceEntryDtoSchema,
+  action: visitedMutationActionSchema,
+  placeResolution: placeResolutionSchema.nullable()
+});
+
 export type WishlistUserPlaceEntryDto = z.infer<
   typeof wishlistUserPlaceEntryDtoSchema
 >;
@@ -112,8 +169,14 @@ export type ListMyUserPlaceEntriesQuery = z.infer<
 export type UpsertWishlistEntryCommand = z.infer<
   typeof upsertWishlistEntryCommandSchema
 >;
+export type SavePlaceToWishlistCommand = z.infer<
+  typeof savePlaceToWishlistCommandSchema
+>;
 export type CreateVisitedEntryCommand = z.infer<
   typeof createVisitedEntryCommandSchema
+>;
+export type MarkPlaceVisitedCommand = z.infer<
+  typeof markPlaceVisitedCommandSchema
 >;
 export type PromoteWishlistToVisitedCommand = z.infer<
   typeof promoteWishlistToVisitedCommandSchema
@@ -127,4 +190,14 @@ export type SetUserPlaceEntryHiddenCommand = z.infer<
 export type UserPlaceEntryResponse = z.infer<typeof userPlaceEntryResponseSchema>;
 export type UserPlaceEntriesResponse = z.infer<
   typeof userPlaceEntriesResponseSchema
+>;
+export type WishlistMutationAction = z.infer<
+  typeof wishlistMutationActionSchema
+>;
+export type VisitedMutationAction = z.infer<typeof visitedMutationActionSchema>;
+export type SavePlaceToWishlistResponse = z.infer<
+  typeof savePlaceToWishlistResponseSchema
+>;
+export type MarkPlaceVisitedResponse = z.infer<
+  typeof markPlaceVisitedResponseSchema
 >;

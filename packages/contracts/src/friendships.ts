@@ -20,9 +20,13 @@ export const createFriendshipCommandSchema = z.object({
   friendUserId: entityIdSchema
 });
 
+export const addFriendCommandSchema = createFriendshipCommandSchema;
+
 export const removeFriendshipCommandSchema = z.object({
   friendUserId: entityIdSchema
 });
+
+export const removeFriendCommandSchema = removeFriendshipCommandSchema;
 
 export const listMyFriendshipsQuerySchema = z.object({
   cursor: entityIdSchema.optional(),
@@ -37,6 +41,26 @@ export const friendshipListResponseSchema = z.object({
   friendships: z.array(friendshipListItemDtoSchema)
 });
 
+export const ADD_FRIEND_ACTION_VALUES = [
+  "created",
+  "already_friends"
+] as const;
+
+export const REMOVE_FRIEND_ACTION_VALUES = [
+  "removed",
+  "not_friends"
+] as const;
+
+export const addFriendResponseSchema = z.object({
+  friendship: friendshipDtoSchema,
+  action: z.enum(ADD_FRIEND_ACTION_VALUES)
+});
+
+export const removeFriendResponseSchema = z.object({
+  friendUserId: entityIdSchema,
+  action: z.enum(REMOVE_FRIEND_ACTION_VALUES)
+});
+
 export type FriendshipDto = z.infer<typeof friendshipDtoSchema>;
 export type FriendshipListItemDto = z.infer<
   typeof friendshipListItemDtoSchema
@@ -44,9 +68,11 @@ export type FriendshipListItemDto = z.infer<
 export type CreateFriendshipCommand = z.infer<
   typeof createFriendshipCommandSchema
 >;
+export type AddFriendCommand = z.infer<typeof addFriendCommandSchema>;
 export type RemoveFriendshipCommand = z.infer<
   typeof removeFriendshipCommandSchema
 >;
+export type RemoveFriendCommand = z.infer<typeof removeFriendCommandSchema>;
 export type ListMyFriendshipsQuery = z.infer<
   typeof listMyFriendshipsQuerySchema
 >;
@@ -54,3 +80,5 @@ export type FriendshipResponse = z.infer<typeof friendshipResponseSchema>;
 export type FriendshipListResponse = z.infer<
   typeof friendshipListResponseSchema
 >;
+export type AddFriendResponse = z.infer<typeof addFriendResponseSchema>;
+export type RemoveFriendResponse = z.infer<typeof removeFriendResponseSchema>;

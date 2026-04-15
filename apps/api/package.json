@@ -1,5 +1,15 @@
 {
   "name": "@savory/api",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "dependencies": {
+    "@savory/contracts": "workspace:*",
+    "@savory/domain": "workspace:*"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./commands": "./src/commands/index.ts"
+  }
 }

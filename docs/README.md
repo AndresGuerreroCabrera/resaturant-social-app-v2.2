@@ -12,14 +12,15 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 4. `adr/004-domain-model-v2.md`
 5. `adr/005-sql-schema-v2.md`
 6. `adr/006-security-and-rls.md`
-7. `planning/migration-phases.md`
-8. `planning/sql-migrations-v2.md`
-9. `planning/contracts-and-domain-packages.md`
-10. `planning/repo-reorganization.md`
-11. `planning/repo-bootstrap.md`
-12. `adr/007-backend-commands.md` *(cuando exista)*
-13. `planning/backfill-plan.md` *(cuando exista)*
-14. `cutover/cutover-runbook.md` *(cuando exista)*
+7. `adr/007-backend-commands.md`
+8. `planning/migration-phases.md`
+9. `planning/backend-commands-implementation.md`
+10. `planning/sql-migrations-v2.md`
+11. `planning/contracts-and-domain-packages.md`
+12. `planning/repo-reorganization.md`
+13. `planning/repo-bootstrap.md`
+14. `planning/backfill-plan.md` *(cuando exista)*
+15. `cutover/cutover-runbook.md` *(cuando exista)*
 
 ## Que contiene cada carpeta
 
@@ -80,10 +81,12 @@ Aqui van:
 - `adr/004-domain-model-v2.md`
 - `adr/005-sql-schema-v2.md`
 - `adr/006-security-and-rls.md`
+- `adr/007-backend-commands.md`
 
 ### Fuente de verdad operativa
 
 - `planning/migration-phases.md`
+- `planning/backend-commands-implementation.md`
 - `planning/sql-migrations-v2.md`
 - `planning/contracts-and-domain-packages.md`
 - `planning/repo-bootstrap.md`
@@ -109,7 +112,8 @@ Estado de documentacion actualizado tras:
 - cierre del diseno SQL v2 en `adr/005-sql-schema-v2.md`
 - implementacion de migraciones versionadas del schema v2 en `supabase/migrations/`
 - cierre de la politica de seguridad y RLS v2 en `adr/006-security-and-rls.md`
+- implementacion de la capa de comandos backend del core inicial en `apps/api`
 
 Proximo paso recomendado:
 
-- cerrar `adr/007-backend-commands.md` para fijar como operara `apps/api` sobre tablas protegidas y comandos transaccionales
+- cablear el runtime real de `apps/api` con auth, transporte y adaptadores de persistencia sobre la capa de comandos ya cerrada

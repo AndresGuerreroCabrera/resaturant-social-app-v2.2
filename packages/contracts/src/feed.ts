@@ -8,12 +8,12 @@ import {
   publicProfileStatsDtoSchema
 } from "./profiles";
 import {
-  recommendationPostDtoSchema,
+  publicRecommendationPostDtoSchema,
   recommendationQuotaDtoSchema
 } from "./recommendations";
 
 export const recommendationFeedItemDtoSchema = z.object({
-  recommendation: recommendationPostDtoSchema,
+  recommendation: publicRecommendationPostDtoSchema,
   author: publicProfileDtoSchema,
   authorStats: publicProfileStatsDtoSchema.nullable(),
   place: placeDtoSchema,

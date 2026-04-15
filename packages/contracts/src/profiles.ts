@@ -53,6 +53,19 @@ export const updateMyPrivateProfileCommandSchema = z.object({
   onboardingCompletedAt: isoDateTimeSchema.nullable().optional()
 });
 
+export const createOrUpdateProfileCommandSchema = z
+  .object({
+    publicProfile: updateMyPublicProfileCommandSchema.optional(),
+    privateProfile: updateMyPrivateProfileCommandSchema.optional()
+  })
+  .refine(
+    (value) =>
+      value.publicProfile !== undefined || value.privateProfile !== undefined,
+    {
+      message: "At least one profile payload must be provided."
+    }
+  );
+
 export const myProfileResponseSchema = z.object({
   publicProfile: publicProfileDtoSchema,
   privateProfile: privateProfileDtoSchema,
@@ -62,6 +75,11 @@ export const myProfileResponseSchema = z.object({
 export const publicProfileResponseSchema = z.object({
   publicProfile: publicProfileDtoSchema,
   publicStats: publicProfileStatsDtoSchema
+});
+
+export const profileMutationResponseSchema = z.object({
+  publicProfile: publicProfileDtoSchema,
+  privateProfile: privateProfileDtoSchema
 });
 
 export type PublicProfileDto = z.infer<typeof publicProfileDtoSchema>;
@@ -78,7 +96,13 @@ export type UpdateMyPublicProfileCommand = z.infer<
 export type UpdateMyPrivateProfileCommand = z.infer<
   typeof updateMyPrivateProfileCommandSchema
 >;
+export type CreateOrUpdateProfileCommand = z.infer<
+  typeof createOrUpdateProfileCommandSchema
+>;
 export type MyProfileResponse = z.infer<typeof myProfileResponseSchema>;
 export type PublicProfileResponse = z.infer<
   typeof publicProfileResponseSchema
+>;
+export type ProfileMutationResponse = z.infer<
+  typeof profileMutationResponseSchema
 >;

@@ -19,12 +19,13 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 
 - repositorio ya reorganizado como workspace ligero
 - `apps/legacy-web` es el unico sistema de producto operativo hoy
-- `apps/api` y `apps/mobile` siguen existiendo solo como preparacion estructural
+- `apps/api` ya contiene una capa de comandos de backend sin runtime HTTP real
+- `apps/mobile` sigue existiendo solo como preparacion estructural
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
 - el legacy sigue teniendo backend embebido en navegador
 - el contrato real operativo actual sigue siendo `apps/legacy-web` contra tablas Supabase
-- siguen sin existir tests, backend v2 operativo ni migraciones versionadas reales
+- siguen sin existir tests ni backend v2 operativo
 - el tipado fuerte existe ya en paquetes compartidos, pero todavia no gobierna el sistema entero
 
 ### Deuda tecnica critica
@@ -228,7 +229,7 @@ Crear el dominio serio en un schema nuevo.
 - se implementaron las migraciones SQL versionadas del schema `app` en `supabase/migrations/`
 - se implemento `adr/006-security-and-rls.md` con RLS estricta, `grants` conservadores y vistas seguras para lectura publica controlada
 - `authenticated` ya no puede escribir directamente en tablas core de `app`
-- siguen pendientes los comandos transaccionales definitivos y el baseline del schema legacy `public`
+- la capa de comandos del core ya se implementa en `apps/api`, pero siguen pendientes el baseline legacy y cualquier funcion SQL puntual que resulte necesaria
 
 ---
 
@@ -267,7 +268,11 @@ Tener una API real lista para crecer.
 - se implementaron `packages/domain` y `packages/contracts` como base compartida para `apps/api` y `apps/mobile`
 - `packages/domain` fija tipos de dominio, enums e invariantes puras sin I/O
 - `packages/contracts` fija DTOs y validaciones Zod del boundary
-- `apps/api` sigue sin runtime, auth y handlers reales; esta fase queda iniciada solo a nivel de contratos compartidos
+- se implemento `docs/adr/007-backend-commands.md` para fijar el catalogo de comandos del backend
+- `apps/api/src/commands` ya contiene la capa de aplicacion para `resolve_place`, perfiles, user-place, recomendaciones y friendships
+- se definieron puertos transaccionales y errores de negocio del core inicial
+- se ajustaron contratos compartidos para separar recomendaciones publicas frente a DTOs del propietario
+- `apps/api` sigue sin runtime HTTP, auth real y adaptadores de persistencia
 
 ---
 
@@ -298,6 +303,11 @@ Cubrir login, perfil propio, busqueda de lugar, wishlist y visited en v2.
 **Done**
 
 - un usuario puede hacer el flujo base completo solo contra API v2
+
+**Notas de ejecucion (2026-04-14)**
+
+- se implementaron los comandos `create_or_update_profile`, `save_place_to_wishlist` y `mark_place_visited` en la capa de comandos de `apps/api`
+- el flujo de negocio ya esta definido fuera del frontend, pero siguen pendientes transporte HTTP, adapters de base de datos y query side de lectura
 
 ---
 
@@ -330,6 +340,11 @@ Sacar del frontend las reglas sociales criticas.
 **Done**
 
 - ninguna regla critica queda solo en frontend
+
+**Notas de ejecucion (2026-04-14)**
+
+- se implementaron los comandos `publish_recommendation`, `respond_to_recommendation`, `add_friend` y `remove_friend` en `apps/api`
+- el enforcement de negocio ya esta modelado en backend, pero faltan feed/query side, runtime HTTP y persistencia real
 
 ---
 
@@ -495,10 +510,10 @@ No construir `apps/mobile` antes de tener:
 
 - [x] Fase 1 - completada a nivel de repositorio el 2026-04-14; validacion manual pendiente
 - [ ] Fase 2 - iniciada el 2026-04-14; migraciones v2 creadas, baseline legacy y estrategia de versionado pendientes
-- [ ] Fase 3 - iniciada el 2026-04-14; dominio, ADR SQL, migraciones v2 y RLS cerrados, comandos transaccionales y baseline legacy pendientes
-- [ ] Fase 4 - iniciada parcialmente el 2026-04-14 con contratos y tipos compartidos; runtime `apps/api` pendiente
-- [ ] Fase 5 - no iniciada
-- [ ] Fase 6 - no iniciada
+- [ ] Fase 3 - iniciada el 2026-04-14; dominio, ADR SQL, migraciones v2 y RLS cerrados, baseline legacy y funciones SQL puntuales pendientes
+- [ ] Fase 4 - iniciada el 2026-04-14 con contratos compartidos y capa de comandos; runtime `apps/api`, auth y adaptadores pendientes
+- [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
+- [ ] Fase 6 - iniciada el 2026-04-14 a nivel de capa de comandos; feed/read side y runtime pendientes
 - [ ] Fase 7 - no iniciada
 - [ ] Fase 8 - no iniciada
 - [ ] Fase 9 - no iniciada

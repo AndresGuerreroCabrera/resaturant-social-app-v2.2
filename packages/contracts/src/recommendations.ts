@@ -15,6 +15,7 @@ import {
   tagListSchema
 } from "./common";
 import { placeAddressDtoSchema } from "./places";
+import { userPlaceEntryDtoSchema } from "./user-place";
 
 export const recommendationCycleKeyDtoSchema = z.object({
   isoYear: z.number().int().min(2000),
@@ -32,7 +33,7 @@ export const recommendationContentSnapshotDtoSchema = z.object({
   placeCoordinates: geoPointSchema.nullable()
 });
 
-export const recommendationPostDtoSchema = z.object({
+export const ownedRecommendationPostDtoSchema = z.object({
   id: entityIdSchema,
   authorUserId: entityIdSchema,
   placeId: entityIdSchema,
@@ -42,6 +43,17 @@ export const recommendationPostDtoSchema = z.object({
   createdAt: isoDateTimeSchema,
   removedAt: isoDateTimeSchema.nullable()
 });
+
+export const publicRecommendationPostDtoSchema = z.object({
+  id: entityIdSchema,
+  authorUserId: entityIdSchema,
+  placeId: entityIdSchema,
+  cycle: recommendationCycleKeyDtoSchema,
+  snapshot: recommendationContentSnapshotDtoSchema,
+  createdAt: isoDateTimeSchema
+});
+
+export const recommendationPostDtoSchema = ownedRecommendationPostDtoSchema;
 
 export const recommendationReactionDtoSchema = z.object({
   id: entityIdSchema,
@@ -62,10 +74,16 @@ export const createRecommendationPostCommandSchema = z.object({
   userPlaceEntryId: entityIdSchema
 });
 
+export const publishRecommendationCommandSchema =
+  createRecommendationPostCommandSchema;
+
 export const reactToRecommendationCommandSchema = z.object({
   recommendationPostId: entityIdSchema,
   reaction: z.enum(RECOMMENDATION_REACTION_VALUES)
 });
+
+export const respondToRecommendationCommandSchema =
+  reactToRecommendationCommandSchema;
 
 export const listMyRecommendationPostsQuerySchema = z.object({
   cursor: entityIdSchema.optional(),
@@ -73,7 +91,25 @@ export const listMyRecommendationPostsQuerySchema = z.object({
 });
 
 export const recommendationPostResponseSchema = z.object({
-  recommendation: recommendationPostDtoSchema
+  recommendation: ownedRecommendationPostDtoSchema
+});
+
+export const publishRecommendationResponseSchema = z.object({
+  recommendation: ownedRecommendationPostDtoSchema,
+  quota: recommendationQuotaDtoSchema
+});
+
+export const RESPONSE_TO_RECOMMENDATION_ENTRY_ACTION_VALUES = [
+  "none",
+  "created_wishlist",
+  "kept_existing_wishlist",
+  "kept_existing_visited"
+] as const;
+
+export const respondToRecommendationResponseSchema = z.object({
+  reaction: recommendationReactionDtoSchema,
+  resultingEntry: userPlaceEntryDtoSchema.nullable(),
+  entryAction: z.enum(RESPONSE_TO_RECOMMENDATION_ENTRY_ACTION_VALUES)
 });
 
 export type RecommendationCycleKeyDto = z.infer<
@@ -81,6 +117,12 @@ export type RecommendationCycleKeyDto = z.infer<
 >;
 export type RecommendationContentSnapshotDto = z.infer<
   typeof recommendationContentSnapshotDtoSchema
+>;
+export type OwnedRecommendationPostDto = z.infer<
+  typeof ownedRecommendationPostDtoSchema
+>;
+export type PublicRecommendationPostDto = z.infer<
+  typeof publicRecommendationPostDtoSchema
 >;
 export type RecommendationPostDto = z.infer<
   typeof recommendationPostDtoSchema
@@ -94,12 +136,24 @@ export type RecommendationQuotaDto = z.infer<
 export type CreateRecommendationPostCommand = z.infer<
   typeof createRecommendationPostCommandSchema
 >;
+export type PublishRecommendationCommand = z.infer<
+  typeof publishRecommendationCommandSchema
+>;
 export type ReactToRecommendationCommand = z.infer<
   typeof reactToRecommendationCommandSchema
+>;
+export type RespondToRecommendationCommand = z.infer<
+  typeof respondToRecommendationCommandSchema
 >;
 export type ListMyRecommendationPostsQuery = z.infer<
   typeof listMyRecommendationPostsQuerySchema
 >;
 export type RecommendationPostResponse = z.infer<
   typeof recommendationPostResponseSchema
+>;
+export type PublishRecommendationResponse = z.infer<
+  typeof publishRecommendationResponseSchema
+>;
+export type RespondToRecommendationResponse = z.infer<
+  typeof respondToRecommendationResponseSchema
 >;

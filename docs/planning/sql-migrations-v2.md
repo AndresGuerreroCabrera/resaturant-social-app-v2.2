@@ -129,7 +129,6 @@ Si se cambia su shape, hay que tratarlo como cambio de contrato de lectura.
 - politicas mas finas de escritura a traves de JWT de usuario
 - tablas o vistas adicionales para admin/moderacion
 - funciones SQL de comandos transaccionales
-- separacion de DTOs publicos frente a DTOs internos del backend
 - baseline del schema legacy `public`
 
 ## Notas de aplicacion
@@ -141,7 +140,7 @@ Si se cambia su shape, hay que tratarlo como cambio de contrato de lectura.
 
 ## Siguiente paso recomendado
 
-1. cerrar `adr/007-backend-commands.md`
-2. traducir invariantes transaccionales criticos a comandos backend con transaccion clara
+1. cablear el runtime real de `apps/api` sobre la capa de comandos ya implementada
+2. implementar adaptadores de persistencia y transaccion para `schema app`
 3. decidir si alguna garantia adicional conviene como funcion SQL puntual
 4. preparar el baseline legacy y el plan de backfill

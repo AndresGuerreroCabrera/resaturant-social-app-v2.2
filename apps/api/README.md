@@ -1,14 +1,15 @@
 # API
 
-Directorio reservado para `apps/api`.
+Backend oficial del sistema nuevo.
 
 Estado actual:
 
-- estructura preparada
-- sin implementacion real todavia
-- no exponer todavia rutas ni logica de negocio desde aqui
+- existe una primera capa de comandos de aplicacion en `src/commands`
+- los comandos ya modelan ownership, validaciones e invariantes del core inicial
+- aun no existe runtime HTTP real, wiring de auth ni adaptadores de base de datos
 
 Regla:
 
-- el backend oficial vivira aqui mas adelante
-- mientras tanto, el legacy sigue funcionando desde `apps/legacy-web`
+- la logica critica nueva debe nacer aqui, no en clientes
+- `apps/api` seguira siendo el boundary oficial frente al schema `app`
+- mientras no exista runtime real, el legacy sigue funcionando desde `apps/legacy-web`
