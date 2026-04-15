@@ -16,11 +16,14 @@ import type {
   RecommendationReaction,
   RecommendationReactionId,
   RecommendationReactionKind,
+  ReputationEvent,
   ReputationSummary,
   UserPlaceEntry,
   UserPlaceEntryId,
   Visibility
 } from "@savory/domain";
+
+import type { SocialOutboxEvent } from "./outbox-events";
 
 export interface AuthUsersStore {
   userExists(userId: AuthUserId): Promise<boolean>;
@@ -121,6 +124,10 @@ export interface RecommendationsStore {
     authorUserId: AuthUserId,
     cycle: RecommendationCycleKey
   ): Promise<void>;
+  acquireResponseDecisionLock(
+    recommendationPostId: RecommendationPostId,
+    viewerUserId: AuthUserId
+  ): Promise<void>;
   countPostsInCycle(
     authorUserId: AuthUserId,
     cycle: RecommendationCycleKey
@@ -165,13 +172,22 @@ export interface FriendshipsStore {
   ): Promise<boolean>;
 }
 
+export interface AcceptedRecommendationReputationMutation {
+  event: ReputationEvent;
+  summary: ReputationSummary;
+}
+
 export interface ReputationStore {
-  recordAcceptedRecommendation(input: {
+  recordAcceptedRecommendationEvent(input: {
     subjectUserId: AuthUserId;
     actorUserId: AuthUserId;
     recommendationPostId: RecommendationPostId;
     recommendationReactionId: RecommendationReactionId;
-  }): Promise<ReputationSummary>;
+  }): Promise<AcceptedRecommendationReputationMutation>;
+}
+
+export interface OutboxStore {
+  enqueue(events: readonly SocialOutboxEvent[]): Promise<void>;
 }
 
 export interface BackendCommandTransaction {
@@ -182,6 +198,7 @@ export interface BackendCommandTransaction {
   recommendations: RecommendationsStore;
   friendships: FriendshipsStore;
   reputation: ReputationStore;
+  outbox: OutboxStore;
 }
 
 export interface BackendCommandTransactionRunner {

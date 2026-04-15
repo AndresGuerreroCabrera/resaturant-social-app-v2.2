@@ -20,6 +20,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - repositorio ya reorganizado como workspace ligero
 - `apps/legacy-web` es el unico sistema de producto operativo hoy
 - `apps/api` ya contiene una capa de comandos de backend sin runtime HTTP real
+- el slice social de `apps/api` ya emite outbox interno, pero todavia sin backing duradero ni jobs
 - `apps/mobile` sigue existiendo solo como preparacion estructural
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
@@ -346,6 +347,14 @@ Sacar del frontend las reglas sociales criticas.
 - se implementaron los comandos `publish_recommendation`, `respond_to_recommendation`, `add_friend` y `remove_friend` en `apps/api`
 - el enforcement de negocio ya esta modelado en backend, pero faltan feed/query side, runtime HTTP y persistencia real
 
+**Notas de refuerzo (2026-04-15)**
+
+- se reforzo especificamente el flujo de recomendaciones, reacciones y reputacion
+- `publish_recommendation` valida de forma explicita contra `userPlaceEntry` valida del actor y mantiene la regla `visited + public + not hidden`
+- `respond_to_recommendation` serializa la decision del viewer con lock, impide auto-reaccion y mantiene una sola reaccion persistida por viewer
+- la reputacion queda explicitamente modelada como `evento + agregado`, no como contador opaco
+- los side effects futuros salen por outbox interno emitido desde `apps/api`, sin meter todavia notificaciones ni jobs reales
+
 ---
 
 ## Fase 7 - Crear la app movil Expo
@@ -513,7 +522,7 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 3 - iniciada el 2026-04-14; dominio, ADR SQL, migraciones v2 y RLS cerrados, baseline legacy y funciones SQL puntuales pendientes
 - [ ] Fase 4 - iniciada el 2026-04-14 con contratos compartidos y capa de comandos; runtime `apps/api`, auth y adaptadores pendientes
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
-- [ ] Fase 6 - iniciada el 2026-04-14 a nivel de capa de comandos; feed/read side y runtime pendientes
+- [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, backing duradero del outbox y runtime siguen pendientes
 - [ ] Fase 7 - no iniciada
 - [ ] Fase 8 - no iniciada
 - [ ] Fase 9 - no iniciada

@@ -15,6 +15,7 @@ Se creo `apps/api/src/commands/` con:
 - `errors.ts`
 - `mappers.ts`
 - `catalog.ts`
+- `outbox-events.ts`
 - `resolve-place.ts`
 - `create-or-update-profile.ts`
 - `save-place-to-wishlist.ts`
@@ -66,6 +67,28 @@ El feed ya consume el DTO publico.
 - `add_friend`
 - `remove_friend`
 
+## Refuerzo especifico del slice social
+
+En el refuerzo posterior del core social se cerro explicitamente:
+
+- `publish_recommendation` valida siempre contra una `userPlaceEntry` real, propia y bloqueada del actor
+- publicar sigue exigiendo `visited + public + not hidden`
+- la cuota semanal sigue siendo `3` por semana ISO en `Europe/Madrid`
+- `respond_to_recommendation` serializa la decision del viewer con un lock explicito del store
+- la auto-reaccion queda bloqueada antes de cualquier side effect
+- la aceptacion genera reputacion via evento explicito y no via contador ad hoc
+- la aceptacion actualiza el agregado de reputacion dentro de la misma transaccion
+- los side effects futuros salen por outbox interno y no por logica inline acoplada
+
+### Eventos internos emitidos
+
+- `recommendation_published`
+- `recommendation_response_recorded`
+- `reputation_event_recorded`
+
+Estos eventos no forman parte del contrato publico de `apps/api`.
+Quedan como costura interna para notificaciones o jobs futuros.
+
 ## Como queda repartida la logica
 
 ### Validacion de payload
@@ -79,6 +102,7 @@ El feed ya consume el DTO publico.
 ### Orquestacion y ownership
 
 - `apps/api/src/commands`
+- incluyendo emision de outbox interno en el slice social
 
 ### Integridad final, uniques y RLS
 
@@ -89,6 +113,7 @@ El feed ya consume el DTO publico.
 - runtime HTTP real en `apps/api`
 - auth/JWT y actor context real
 - adaptadores de base de datos que implementen `ports.ts`
+- persistencia duradera y consumo del outbox
 - query side del feed
 - query side de perfiles publicos y listas visibles
 - mapeo de errores de negocio a status HTTP
@@ -104,6 +129,7 @@ Hace falta cerrar:
 - bootstrap real del framework de API
 - cliente/driver a Supabase o Postgres desde backend
 - implementaciones concretas de `BackendCommandTransactionRunner` y stores
+- implementacion concreta de `OutboxStore`
 - politica de logging y observabilidad minima
 
 ### Antes de considerar completa la fase de producto
@@ -113,6 +139,7 @@ Hace falta cerrar:
 - rutas/endpoints
 - lecturas publicas derivadas para feed y perfiles
 - adaptadores de place provider
+- jobs consumidores del outbox
 - estrategia de tests
 
 ## Riesgos residuales
@@ -120,3 +147,4 @@ Hace falta cerrar:
 - la capa de comandos existe, pero aun no corre sobre una base real
 - no se ejecuto typecheck ni test de runtime en esta fase
 - las reglas criticas ya estan fuera del frontend a nivel de diseno e implementacion de backend, pero todavia no estan cableadas a transporte real
+- el outbox interno ya se emite desde comandos sociales, pero aun no tiene backing duradero ni consumidores reales

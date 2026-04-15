@@ -13,14 +13,15 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 5. `adr/005-sql-schema-v2.md`
 6. `adr/006-security-and-rls.md`
 7. `adr/007-backend-commands.md`
-8. `planning/migration-phases.md`
-9. `planning/backend-commands-implementation.md`
-10. `planning/sql-migrations-v2.md`
-11. `planning/contracts-and-domain-packages.md`
-12. `planning/repo-reorganization.md`
-13. `planning/repo-bootstrap.md`
-14. `planning/backfill-plan.md` *(cuando exista)*
-15. `cutover/cutover-runbook.md` *(cuando exista)*
+8. `adr/008-recommendations-and-reputation.md`
+9. `planning/migration-phases.md`
+10. `planning/backend-commands-implementation.md`
+11. `planning/sql-migrations-v2.md`
+12. `planning/contracts-and-domain-packages.md`
+13. `planning/repo-reorganization.md`
+14. `planning/repo-bootstrap.md`
+15. `planning/backfill-plan.md` *(cuando exista)*
+16. `cutover/cutover-runbook.md` *(cuando exista)*
 
 ## Que contiene cada carpeta
 
@@ -82,6 +83,7 @@ Aqui van:
 - `adr/005-sql-schema-v2.md`
 - `adr/006-security-and-rls.md`
 - `adr/007-backend-commands.md`
+- `adr/008-recommendations-and-reputation.md`
 
 ### Fuente de verdad operativa
 
@@ -113,7 +115,8 @@ Estado de documentacion actualizado tras:
 - implementacion de migraciones versionadas del schema v2 en `supabase/migrations/`
 - cierre de la politica de seguridad y RLS v2 en `adr/006-security-and-rls.md`
 - implementacion de la capa de comandos backend del core inicial en `apps/api`
+- refuerzo del slice social de recomendaciones, reacciones y reputacion en `adr/008-recommendations-and-reputation.md`
 
 Proximo paso recomendado:
 
-- cablear el runtime real de `apps/api` con auth, transporte y adaptadores de persistencia sobre la capa de comandos ya cerrada
+- cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y backing duradero del outbox sobre la capa de comandos ya cerrada

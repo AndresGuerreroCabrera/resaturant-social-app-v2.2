@@ -35,6 +35,7 @@ Cada comando se implementa como:
 - orquestacion de negocio en `apps/api`
 - invariantes puras reutilizadas desde `@savory/domain`
 - persistencia y atomicidad a traves de un `transaction runner` y puertos de persistencia
+- emision de outbox interno cuando el cambio de dominio deba producir side effects asincronos
 
 Decision cerrada:
 
@@ -91,6 +92,7 @@ La primera capa de comandos se implementa con:
 - `apps/api/src/commands/ports.ts`
 - `apps/api/src/commands/errors.ts`
 - `apps/api/src/commands/catalog.ts`
+- `apps/api/src/commands/outbox-events.ts`
 - un archivo por comando de negocio
 
 Los puertos representan dependencias del runtime futuro:
@@ -102,6 +104,7 @@ Los puertos representan dependencias del runtime futuro:
 - recommendations
 - friendships
 - reputation
+- outbox interno
 
 ## Catalogo de comandos
 
@@ -292,10 +295,11 @@ Donde vive la logica:
 - ciclo y cuota desde `@savory/domain`
 - chequeos y snapshot en `apps/api`
 - unique `author + place` y FK compuesta en SQL
+- outbox interno emitido por `apps/api` dentro de la misma transaccion
 
 Transaccion:
 
-- si, con bloqueo de cuota por autor+ciclo
+- si, con bloqueo de cuota por autor+ciclo y persistencia atomica del outbox interno
 
 Errores relevantes:
 
@@ -327,20 +331,22 @@ Validaciones e invariantes:
 - la recomendacion debe existir y seguir activa
 - el autor no puede reaccionar a su propio post
 - solo una reaccion por `viewer + recommendation`
+- la decision del viewer se serializa con lock antes de leer/escribir
 - `accepted` crea wishlist privada solo si no existe entrada previa
 - `accepted` no degrada una visita existente
 - `rejected` no crea entry
-- `accepted` registra reputacion del autor
+- `accepted` registra reputacion del autor como evento y refresca el agregado
 
 Donde vive la logica:
 
 - validacion de reaccion e inmutabilidad en `apps/api`
 - efectos laterales sobre wishlist y reputacion tambien en `apps/api`
+- side effects asincronos futuros desacoplados via outbox interno
 - SQL protege unique de reacciones y de eventos por reaccion
 
 Transaccion:
 
-- si, porque inserta reaccion y puede crear wishlist + evento + agregado
+- si, porque inserta reaccion, puede crear wishlist, registra reputacion basada en evento, actualiza agregado y persiste outbox interno
 
 Errores relevantes:
 
@@ -453,6 +459,7 @@ La capa actual fija estos codigos base:
 - runtime HTTP real
 - wiring de auth/JWT
 - adaptadores concretos a Supabase/Postgres
+- persistencia duradera y delivery del outbox
 - query side del feed y de perfiles publicos
 - formula final de reputacion y thresholds de expertise
 - moderacion de recomendaciones

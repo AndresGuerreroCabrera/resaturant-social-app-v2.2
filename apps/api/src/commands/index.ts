@@ -4,6 +4,7 @@ export * from "./create-or-update-profile";
 export * from "./errors";
 export * from "./mappers";
 export * from "./mark-place-visited";
+export * from "./outbox-events";
 export * from "./ports";
 export * from "./publish-recommendation";
 export * from "./remove-friend";

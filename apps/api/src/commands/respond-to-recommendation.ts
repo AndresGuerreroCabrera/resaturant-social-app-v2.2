@@ -13,6 +13,10 @@ import {
   toRecommendationReactionDto,
   toUserPlaceEntryDto
 } from "./mappers";
+import {
+  buildRecommendationResponseRecordedOutboxEvent,
+  buildReputationEventRecordedOutboxEvent
+} from "./outbox-events";
 import { defineBackendCommand } from "./runtime";
 
 export const respondToRecommendationBackendCommand = defineBackendCommand<
@@ -34,6 +38,11 @@ export const respondToRecommendationBackendCommand = defineBackendCommand<
         "RECOMMENDATION_NOT_FOUND",
         "The recommendation is not available.",
         { recommendationPostId: input.recommendationPostId }
+      );
+
+      await transaction.recommendations.acquireResponseDecisionLock(
+        recommendation.id,
+        context.actor.userId
       );
 
       const existingReaction =
@@ -64,6 +73,14 @@ export const respondToRecommendationBackendCommand = defineBackendCommand<
       });
 
       if (input.reaction === "rejected") {
+        await transaction.outbox.enqueue([
+          buildRecommendationResponseRecordedOutboxEvent({
+            recommendation,
+            reaction,
+            entryAction: "none"
+          })
+        ]);
+
         return {
           reaction: toRecommendationReactionDto(reaction),
           resultingEntry: null,
@@ -104,12 +121,13 @@ export const respondToRecommendationBackendCommand = defineBackendCommand<
         entryAction = "kept_existing_visited";
       }
 
-      await transaction.reputation.recordAcceptedRecommendation({
-        subjectUserId: recommendation.authorUserId,
-        actorUserId: context.actor.userId,
-        recommendationPostId: recommendation.id,
-        recommendationReactionId: reaction.id
-      });
+      const reputationMutation =
+        await transaction.reputation.recordAcceptedRecommendationEvent({
+          subjectUserId: recommendation.authorUserId,
+          actorUserId: context.actor.userId,
+          recommendationPostId: recommendation.id,
+          recommendationReactionId: reaction.id
+        });
 
       assertCommandRule(
         resultingEntry,
@@ -120,6 +138,15 @@ export const respondToRecommendationBackendCommand = defineBackendCommand<
           viewerUserId: context.actor.userId
         }
       );
+
+      await transaction.outbox.enqueue([
+        buildRecommendationResponseRecordedOutboxEvent({
+          recommendation,
+          reaction,
+          entryAction
+        }),
+        buildReputationEventRecordedOutboxEvent(reputationMutation)
+      ]);
 
       return {
         reaction: toRecommendationReactionDto(reaction),

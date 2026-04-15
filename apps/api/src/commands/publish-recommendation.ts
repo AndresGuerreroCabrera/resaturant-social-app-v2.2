@@ -13,6 +13,7 @@ import {
   toOwnedRecommendationPostDto,
   toRecommendationQuotaDto
 } from "./mappers";
+import { buildRecommendationPublishedOutboxEvent } from "./outbox-events";
 import { defineBackendCommand } from "./runtime";
 
 export const publishRecommendationBackendCommand = defineBackendCommand<
@@ -107,6 +108,10 @@ export const publishRecommendationBackendCommand = defineBackendCommand<
           placeCoordinates: place.coordinates
         }
       });
+
+      await transaction.outbox.enqueue([
+        buildRecommendationPublishedOutboxEvent(recommendation)
+      ]);
 
       return {
         recommendation: toOwnedRecommendationPostDto(recommendation),
