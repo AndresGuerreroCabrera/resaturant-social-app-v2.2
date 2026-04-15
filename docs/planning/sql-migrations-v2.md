@@ -51,16 +51,28 @@ Incluye:
 - cierre de acceso directo a cliente autenticado
 - RLS activada sin politicas de cliente
 
+### 5. `20260415160000_create_backfill_schema.sql`
+
+Incluye:
+
+- schema operativo `backfill`
+- utilidades SQL para ids deterministas y normalizacion conservadora
+- tablas de mappings y `skipped_records`
+- cierre de acceso para cliente autenticado
+- soporte de reconciliacion y rollback para el backfill v1 -> v2
+
 ## Orden
 
 1. aplicar `20260414193000_create_app_schema_v2.sql`
 2. aplicar `20260414194000_create_app_public_profile_stats_view.sql`
 3. aplicar `20260414200000_configure_app_security_and_rls.sql`
 4. aplicar `20260415143000_create_app_outbox_events.sql`
+5. aplicar `20260415160000_create_backfill_schema.sql`
 
 La segunda depende de la primera.
 La tercera depende de ambas.
 La cuarta depende del schema `app` y de la estrategia de seguridad ya fijada.
+La quinta depende del schema `app` ya creado y prepara el soporte operativo del backfill.
 
 ## Como aplicarlas
 
@@ -89,6 +101,10 @@ En local o en el entorno que se use para versionar Supabase:
    - `authenticated` solo puede leer las superficies explicitamente abiertas
    - no existe escritura directa de `authenticated` sobre tablas core
    - `authenticated` no puede leer ni escribir `app.outbox_events`
+5. verificar que:
+   - existe `backfill.*`
+   - `authenticated` no puede leer ni escribir `backfill.*`
+   - `service_role` si puede operar sobre `backfill.*`
 
 ## Conflictos potenciales
 
@@ -138,6 +154,16 @@ Consecuencias:
 - los comandos pueden persistir side effects sin bloquearse con delivery real
 - el worker futuro necesitara un claim SQL atomico coherente con `status`, `next_run_at` y `lease_expires_at`
 
+### 9. Soporte de backfill
+
+`backfill.*` no es parte del dominio canonico, pero si de la operativa de migracion.
+
+Consecuencias:
+
+- los ensayos de migracion ya tienen mappings y rollback razonable
+- el backfill asume que `public` sigue vivo como artefacto legacy de referencia
+- si alguien carga datos manuales en `app.*` antes del rehearsal, puede provocar conflictos con ids deterministas del backfill
+
 ## Que quedo fuera deliberadamente
 
 - baseline del schema legacy `public`
@@ -148,6 +174,8 @@ Consecuencias:
 - feed materializado
 - push notifications reales
 - media processing real
+- baseline versionado del schema legacy `public`
+- automatizacion de ejecucion del backfill desde CLI o pipeline
 
 ## Que sigue fuera tras esta fase
 
@@ -169,4 +197,5 @@ Consecuencias:
 2. implementar adaptadores de persistencia y transaccion para `schema app`
 3. implementar el adapter SQL del outbox y el worker de polling real
 4. decidir si alguna garantia adicional conviene como funcion SQL puntual
-5. preparar el baseline legacy y el plan de backfill
+5. ensayar el backfill en staging y documentar diferencias reales
+6. preparar el baseline legacy cuando se cierre la estrategia final de versionado de `public`

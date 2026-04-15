@@ -22,8 +22,9 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 14. `planning/contracts-and-domain-packages.md`
 15. `planning/repo-reorganization.md`
 16. `planning/repo-bootstrap.md`
-17. `planning/backfill-plan.md` *(cuando exista)*
-18. `cutover/cutover-runbook.md` *(cuando exista)*
+17. `planning/backfill-plan.md`
+18. `cutover/backfill-runbook.md`
+19. `cutover/cutover-runbook.md` *(cuando exista)*
 
 ## Que contiene cada carpeta
 
@@ -96,6 +97,8 @@ Aqui van:
 - `planning/sql-migrations-v2.md`
 - `planning/contracts-and-domain-packages.md`
 - `planning/repo-bootstrap.md`
+- `planning/backfill-plan.md`
+- `cutover/backfill-runbook.md`
 
 ## Reglas para futuras sesiones
 
@@ -121,7 +124,8 @@ Estado de documentacion actualizado tras:
 - implementacion de la capa de comandos backend del core inicial en `apps/api`
 - refuerzo del slice social de recomendaciones, reacciones y reputacion en `adr/008-recommendations-and-reputation.md`
 - base asincrona durable de outbox y polling en `adr/009-outbox-and-jobs.md`
+- implementacion del soporte de backfill v1 -> v2 con schema `backfill`, scripts SQL reejecutables y runbook operativo
 
 Proximo paso recomendado:
 
-- cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y handlers/worker reales sobre la base asincrona ya cerrada
+- ensayar el backfill en staging con reconciliacion real y, en paralelo, cablear el runtime real de `apps/api` con auth, transporte, adaptadores de persistencia y handlers/worker reales

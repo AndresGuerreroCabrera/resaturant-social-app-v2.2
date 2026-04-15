@@ -535,6 +535,32 @@ Decision:
 
 ## Infraestructura operativa posterior
 
+### `backfill.*`
+
+No forma parte del dominio canonico ni del boundary de producto.
+
+Decision implementada:
+
+- el soporte de migracion v1 -> v2 vive en un schema operativo separado llamado `backfill`
+- ese schema guarda mappings, skips y metadatos de reconciliacion
+- no se mezclan ids ni columnas legacy dentro de tablas canonicas `app.*`
+- el schema `backfill` existe para que el backfill sea reejecutable, auditable y con rollback razonable
+
+Objetos operativos iniciales:
+
+- `backfill.profile_mappings`
+- `backfill.place_mappings`
+- `backfill.user_place_entry_mappings`
+- `backfill.recommendation_post_mappings`
+- `backfill.recommendation_reaction_mappings`
+- `backfill.friendship_mappings`
+- `backfill.skipped_records`
+
+Decision importante:
+
+- los objetos `backfill.*` solo se usan con `service_role` o contextos operativos controlados
+- no son superficie publica del producto
+
 ### `app.outbox_events`
 
 No forma parte del core canonico del dominio.

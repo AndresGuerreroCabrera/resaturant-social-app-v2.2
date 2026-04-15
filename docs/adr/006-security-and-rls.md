@@ -339,6 +339,27 @@ Motivo:
 - contiene payloads internos, errores operativos y metadata de retry
 - no es superficie de producto ni SQL publica
 
+### `backfill.*`
+
+Lectura directa:
+
+- `authenticated`: no
+
+Escritura directa:
+
+- `authenticated`: no
+- `service_role`: si
+
+Columnas sensibles:
+
+- toda la operativa de mappings, skips y reconciliacion
+
+Motivo:
+
+- es infraestructura operativa de migracion
+- no forma parte del producto
+- no debe exponerse ni siquiera como superficie SQL autenticada de lectura
+
 ### `app.public_profile_stats_v`
 
 Lectura directa:
@@ -369,6 +390,7 @@ Motivo:
 | `app.reputation_events` | no | no | no |
 | `app.reputation_summaries` | no | no | `app.public_profile_stats_v` |
 | `app.outbox_events` | no | no | no |
+| `backfill.*` | no | no | no |
 
 ## Columnas y datos que no deben exponerse nunca por acceso SQL directo publico
 
@@ -383,6 +405,7 @@ Motivo:
 - `app.reputation_events.*`
 - `app.reputation_summaries.*`
 - `app.outbox_events.*`
+- `backfill.*`
 
 ## Implementacion tecnica cerrada
 

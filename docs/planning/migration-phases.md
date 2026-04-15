@@ -26,6 +26,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - el legacy sigue siendo un frontend estatico multipagina
 - el legacy sigue teniendo backend embebido en navegador
 - el contrato real operativo actual sigue siendo `apps/legacy-web` contra tablas Supabase
+- ya existe soporte operativo de backfill en SQL con schema `backfill` y scripts reejecutables en `supabase/seed/`
 - siguen sin existir tests ni backend v2 operativo
 - el tipado fuerte existe ya en paquetes compartidos, pero todavia no gobierna el sistema entero
 
@@ -429,6 +430,24 @@ Poder migrar datos sin improvisacion.
 - informe de diferencias
 - rollback documentado
 
+**Notas de ejecucion (2026-04-15)**
+
+- se implemento un schema operativo `backfill` para mappings, skips y reconciliacion sin contaminar `app.*`
+- se implementaron scripts SQL reejecutables en `supabase/seed/` para:
+  - prechecks
+  - backfill principal
+  - postchecks
+  - rollback
+- la resolucion de `places` se cerro de forma conservadora:
+  - `provider_place_id` cuando existe
+  - si no existe, reutilizacion del `place` con proveedor cuando otra fila coincide por `name + address`
+  - si aun asi no hay proveedor, solo merge por `name + address` exactos tras normalizacion conservadora
+  - si no hay confianza, la fila queda aislada
+- `restaurants` y `desired_restaurants` ya se migran al modelo unificado `user_place_entries`
+- las recomendaciones privadas o que no cumplen reglas v2 se saltan y quedan registradas en `backfill.skipped_records`
+- la reputacion no copia contadores legacy: se recompone desde aceptaciones migradas y se recalcula el score reconstruyendo la formula legacy de forma cronologica
+- la fase queda iniciada a nivel de tooling y documentacion, pero todavia no validada en un rehearsal real sobre base de datos
+
 ---
 
 ## Fase 9 - Cutover controlado
@@ -531,5 +550,5 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
 - [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
 - [ ] Fase 7 - no iniciada
-- [ ] Fase 8 - no iniciada
+- [ ] Fase 8 - iniciada el 2026-04-15 con schema `backfill`, scripts SQL de backfill y runbook; rehearsal real y validacion en staging pendientes
 - [ ] Fase 9 - no iniciada

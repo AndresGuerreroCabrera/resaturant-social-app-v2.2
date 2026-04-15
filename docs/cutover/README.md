@@ -4,12 +4,11 @@ Este directorio queda reservado para documentacion operativa de migracion y paso
 
 Estado actual:
 
-- sin runbooks todavia
-- carpeta creada solo como preparacion estructural
+- ya existe `backfill-runbook.md`
+- sigue pendiente el `cutover-runbook.md` final
 
 Mas adelante iran aqui:
 
-- backfill runbook
 - cutover runbook
 - validaciones pre y post migracion
 - rollback
