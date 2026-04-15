@@ -16,16 +16,18 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 8. `adr/008-recommendations-and-reputation.md`
 9. `adr/009-outbox-and-jobs.md`
 10. `adr/010-cutover-strategy.md`
-11. `planning/migration-phases.md`
-12. `planning/backend-commands-implementation.md`
-13. `planning/async-processing.md`
-14. `planning/sql-migrations-v2.md`
-15. `planning/contracts-and-domain-packages.md`
-16. `planning/repo-reorganization.md`
-17. `planning/repo-bootstrap.md`
-18. `planning/backfill-plan.md`
-19. `cutover/backfill-runbook.md`
-20. `cutover/cutover-runbook.md`
+11. `adr/011-mobile-app-architecture.md`
+12. `planning/migration-phases.md`
+13. `planning/mobile-bootstrap.md`
+14. `planning/backend-commands-implementation.md`
+15. `planning/async-processing.md`
+16. `planning/sql-migrations-v2.md`
+17. `planning/contracts-and-domain-packages.md`
+18. `planning/repo-reorganization.md`
+19. `planning/repo-bootstrap.md`
+20. `planning/backfill-plan.md`
+21. `cutover/backfill-runbook.md`
+22. `cutover/cutover-runbook.md`
 
 ## Que contiene cada carpeta
 
@@ -90,10 +92,12 @@ Aqui van:
 - `adr/008-recommendations-and-reputation.md`
 - `adr/009-outbox-and-jobs.md`
 - `adr/010-cutover-strategy.md`
+- `adr/011-mobile-app-architecture.md`
 
 ### Fuente de verdad operativa
 
 - `planning/migration-phases.md`
+- `planning/mobile-bootstrap.md`
 - `planning/backend-commands-implementation.md`
 - `planning/async-processing.md`
 - `planning/sql-migrations-v2.md`
@@ -129,7 +133,8 @@ Estado de documentacion actualizado tras:
 - base asincrona durable de outbox y polling en `adr/009-outbox-and-jobs.md`
 - implementacion del soporte de backfill v1 -> v2 con schema `backfill`, scripts SQL reejecutables y runbook operativo
 - cierre de la estrategia de cutover con dos etapas, freeze corto y legado deprecado tras el cambio de sistema de verdad
+- bootstrap real de `apps/mobile` con Expo Router, TypeScript, React Query y cliente base hacia `apps/api`
 
 Proximo paso recomendado:
 
-- cablear el runtime real de `apps/api`, implementar los mecanismos de `cutover_freeze`/`deprecation` del legacy y ensayar en staging tanto el backfill como el runbook completo de cutover
+- cablear el runtime real de `apps/api` y empezar la primera integracion movil real contra ese boundary, manteniendo en paralelo el rehearsal de backfill y cutover en staging

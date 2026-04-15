@@ -4,6 +4,16 @@
 
 Accepted
 
+## Nota de estado posterior
+
+Este ADR fijo la estructura ligera inicial del repo.
+
+Estado actual relevante:
+
+- `apps/api` ya no es solo una carpeta reservada; contiene una primera capa de comandos y base asincrona interna
+- `apps/mobile` ya no es solo una carpeta reservada; tiene scaffold Expo real documentado en `adr/011-mobile-app-architecture.md`
+- `packages/contracts` y `packages/domain` ya no estan vacios; contienen el dominio y los contratos compartidos iniciales
+
 ## Contexto
 
 El repositorio ya fue reorganizado para aislar el proyecto web actual en `apps/legacy-web`.
@@ -46,11 +56,11 @@ Se adopta una estructura ligera basada en `pnpm-workspace.yaml` y carpetas expli
 ### Reglas de esta estructura
 
 1. `apps/legacy-web` sigue siendo el sistema legacy operativo y congelado salvo fixes criticos.
-2. `apps/api` queda reservado como boundary oficial futuro del backend, pero todavia sin implementacion real.
-3. `apps/mobile` queda reservado para la app Expo/React Native futura, pero todavia sin implementacion real.
-4. `packages/contracts` y `packages/domain` quedan preparados como paquetes compartidos futuros, pero vacios de dominio implementado por ahora.
-5. `supabase/migrations` y `supabase/seed` quedan preparados como fuente de verdad futura versionada, pero todavia sin baseline ni schema v2.
-6. `docs/cutover` queda preparado para runbooks operativos, aunque aun no tenga contenido funcional.
+2. `apps/api` queda como boundary oficial futuro del backend; en el estado actual ya tiene una primera implementacion interna, aunque sigue sin runtime HTTP real.
+3. `apps/mobile` queda como hogar de la app Expo/React Native; en el estado actual ya tiene scaffold real, aunque sigue sin integracion final con `apps/api`.
+4. `packages/contracts` y `packages/domain` quedan preparados como paquetes compartidos; en el estado actual ya contienen implementacion inicial.
+5. `supabase/migrations` y `supabase/seed` quedan preparados como fuente de verdad futura versionada; en el estado actual ya contienen schema v2, soporte de backfill y scripts operativos.
+6. `docs/cutover` queda preparado para runbooks operativos; en el estado actual ya contiene runbooks de backfill y cutover.
 
 ### Regla critica sobre legacy y fuente de verdad futura
 
@@ -77,9 +87,8 @@ Se adopta una estructura ligera basada en `pnpm-workspace.yaml` y carpetas expli
 
 ### Costes
 
-- varias carpetas quedan como preparacion y no como implementacion real todavia
-- `pnpm-workspace.yaml` pasa a apuntar a paquetes placeholder que aun no contienen codigo de negocio
-- la frontera real del backend sigue pendiente de implementacion; hoy el legacy sigue hablando con Supabase
+- varias carpetas arrancaron como preparacion antes de tener implementacion real
+- la frontera real del backend sigue pendiente de runtime HTTP completo; hoy el legacy sigue hablando con Supabase
 
 ## Que sigue siendo legacy
 

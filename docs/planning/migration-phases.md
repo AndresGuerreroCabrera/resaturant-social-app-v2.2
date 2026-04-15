@@ -21,7 +21,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - `apps/legacy-web` es el unico sistema de producto operativo hoy
 - `apps/api` ya contiene una capa de comandos de backend sin runtime HTTP real
 - `apps/api` ya contiene una base asincrona interna de outbox/polling, pero todavia sin runtime ni handlers reales
-- `apps/mobile` sigue existiendo solo como preparacion estructural
+- `apps/mobile` ya tiene scaffold Expo real, pero todavia sin integracion end-to-end con `apps/api`
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
 - el legacy sigue teniendo backend embebido en navegador
@@ -400,6 +400,17 @@ Tener el nuevo frontend estrategico consumiendo v2.
 - la app cubre auth, busqueda, wishlist, visited y perfil
 - social cuando fase 6 este cerrada
 
+**Notas de ejecucion (2026-04-15)**
+
+- se creo la base real de `apps/mobile` con Expo + TypeScript + Expo Router
+- la app ya tiene shell autenticada, tabs base, tema y providers
+- se introdujo React Query como capa de estado remoto
+- se preparo un cliente HTTP autenticado base orientado a `apps/api`
+- la sesion base ya usa secure storage en nativo y fallback web
+- `apps/mobile` ya consume `@savory/contracts` y `@savory/domain` como fuente compartida de verdad
+- las pantallas iniciales usan stubs tipados y validados para no fingir integracion con un runtime HTTP todavia inexistente
+- la fase queda iniciada a nivel de scaffold real y arquitectura interna, pero siguen pendientes auth real, endpoints reales y query side productivo
+
 ---
 
 ## Fase 8 - Preparar convivencia con backfill repetible
@@ -566,6 +577,6 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 4 - iniciada el 2026-04-14 y reforzada el 2026-04-15 con base asincrona durable; runtime `apps/api`, auth, adaptadores y handlers pendientes
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
 - [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
-- [ ] Fase 7 - no iniciada
+- [ ] Fase 7 - iniciada el 2026-04-15 con scaffold Expo real, shell movil y cliente base; auth real e integracion con `apps/api` pendientes
 - [ ] Fase 8 - iniciada el 2026-04-15 con schema `backfill`, scripts SQL de backfill y runbook; rehearsal real y validacion en staging pendientes
 - [ ] Fase 9 - iniciada el 2026-04-15 a nivel de ADR y runbook; rehearsal completo, freeze real y ejecucion de produccion pendientes
