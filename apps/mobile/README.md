@@ -25,7 +25,8 @@ Base real de la app movil nueva en `apps/mobile`.
 - navegacion base lista
 - auth local base lista con secure storage en nativo
 - cliente HTTP autenticado base listo
-- queries iniciales funcionando en modo stub
+- primer vertical slice auth/profile operativo en modo stub persistente
+- lectura de perfil publico y privado ya conectada a la mobile data layer
 
 ## Lo que sigue pendiente
 

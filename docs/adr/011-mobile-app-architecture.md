@@ -45,6 +45,7 @@ apps/mobile/
     index.tsx
     +not-found.tsx
     (auth)/
+    (onboarding)/
     (app)/
   src/
     app/
@@ -74,6 +75,7 @@ apps/mobile/
 Se adopta Expo Router con dos grupos principales:
 
 - `(auth)` para entrada y bootstrap de sesion
+- `(onboarding)` para completar el estado minimo del owner profile
 - `(app)` para la shell autenticada
 
 La shell autenticada usa tabs ligeras:
@@ -86,6 +88,7 @@ Decision cerrada:
 
 - la navegacion no replica pantallas ni convenciones del legacy HTML
 - el flujo arranca desde una raiz que decide segun estado de sesion local
+- el acceso a `(app)` queda gated por `getMyProfile` y `onboardingCompletedAt`
 
 ## State management
 
@@ -166,6 +169,7 @@ Mientras `apps/api` no tenga runtime HTTP completo:
 - las queries de ejemplo viven en modo stub
 - las respuestas stub siguen validandose contra `@savory/contracts`
 - si se configura `EXPO_PUBLIC_API_BASE_URL`, las pantallas dejan de fingir integracion y muestran claramente que el runtime aun falta
+- el primer vertical slice auth/profile puede funcionar de forma honesta en `stub` gracias a un store local persistente encapsulado dentro de `src/api/backend/stubs/`
 
 Decision cerrada:
 
@@ -204,6 +208,21 @@ En esta fase quedan intencionalmente pendientes:
 - offline real
 - push notifications
 - media upload
+
+## Slice auth/profile inicial
+
+El primer slice funcional de mobile queda resuelto con:
+
+- bootstrap de sesion local
+- sesion persistente
+- onboarding minimo
+- owner profile via `getMyProfile`
+- public profile via `getPublicProfile`
+
+Decision cerrada:
+
+- ese slice puede operar hoy solo en `stub mode`
+- no se finge todavia un login final ni un runtime HTTP que aun no existe
 
 ## Tradeoffs
 

@@ -8,8 +8,16 @@ import {
   mapListRecommendationFeedQuery,
   mapSearchPlacesQuery
 } from "../mappers";
-import { ApiRuntimeNotReadyError } from "../../errors";
-import { stubMyProfileResponse, stubRecommendationFeedResponse } from "./stub-data";
+import { ApiAuthenticationError, ApiRuntimeNotReadyError } from "../../errors";
+import { stubRecommendationFeedResponse } from "./stub-data";
+import {
+  loadOrCreateStubMyProfile,
+  loadStubPublicProfile
+} from "./stub-profile-store";
+
+interface StubAccessOptions {
+  sessionUserId: string | null;
+}
 
 async function wait(ms: number) {
   await new Promise((resolve) => setTimeout(resolve, ms));
@@ -21,15 +29,28 @@ function createStubOnlyNotReady(operationName: string): never {
   );
 }
 
-export function createStubQueryAccess(): MobileQueryAccess {
+function requireSessionUserId(sessionUserId: string | null) {
+  if (!sessionUserId) {
+    throw new ApiAuthenticationError(
+      "A local mobile session is required before reading authenticated profile data."
+    );
+  }
+
+  return sessionUserId;
+}
+
+export function createStubQueryAccess({
+  sessionUserId
+}: StubAccessOptions): MobileQueryAccess {
   return {
     async getMyProfile() {
       await wait(160);
-      return stubMyProfileResponse;
+      return loadOrCreateStubMyProfile(requireSessionUserId(sessionUserId));
     },
     async getPublicProfile(input) {
-      mapGetPublicProfileQuery(input);
-      createStubOnlyNotReady("getPublicProfile");
+      const parsedInput = mapGetPublicProfileQuery(input);
+      await wait(120);
+      return loadStubPublicProfile(parsedInput.profileUserId);
     },
     async listRecommendationFeed(input) {
       mapListRecommendationFeedQuery(input);

@@ -6,7 +6,11 @@ import { createHttpQueryAccess } from "./http/create-http-query-access";
 import { createStubCommandAccess } from "./stubs/create-stub-command-access";
 import { createStubQueryAccess } from "./stubs/create-stub-query-access";
 
-function composeAccess(mode: MobileBackendMode, apiClient: ApiClient) {
+function composeAccess(
+  mode: MobileBackendMode,
+  apiClient: ApiClient,
+  sessionUserId: string | null
+) {
   if (mode === "http") {
     return {
       mode,
@@ -17,13 +21,14 @@ function composeAccess(mode: MobileBackendMode, apiClient: ApiClient) {
 
   return {
     mode,
-    queries: createStubQueryAccess(),
-    commands: createStubCommandAccess()
+    queries: createStubQueryAccess({ sessionUserId }),
+    commands: createStubCommandAccess({ sessionUserId })
   } satisfies MobileBackendAccess;
 }
 
 export function createMobileBackendAccess(
-  apiClient: ApiClient
+  apiClient: ApiClient,
+  sessionUserId: string | null
 ): MobileBackendAccess {
-  return composeAccess(getMobileBackendMode(), apiClient);
+  return composeAccess(getMobileBackendMode(), apiClient, sessionUserId);
 }

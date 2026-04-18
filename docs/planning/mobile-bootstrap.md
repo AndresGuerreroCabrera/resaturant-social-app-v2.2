@@ -18,10 +18,12 @@ esperar a que `apps/api` este 100% operativo.
 - cliente HTTP autenticado base
 - pantallas y queries iniciales en modo stub tipado
 - capa compartida `src/api/backend/` con adapters `stub | http`, query keys y separacion query/command
+- primer vertical slice auth/profile con onboarding minimo y lectura publica/privada
 
 ## Como queda organizada la app
 
 - `app/` contiene rutas y grupos de navegacion
+- `app/(onboarding)/` contiene el gate y formulario minimo de perfil
 - `src/app/` contiene providers, tema y componentes de shell
 - `src/api/` contiene acceso a datos y cache
 - `src/api/backend/` contiene la capa compartida de data access
@@ -45,6 +47,7 @@ Pasos previstos cuando se instalen dependencias:
 - navegacion base
 - restauracion de sesion local
 - boundary claro hacia `apps/api`
+- slice auth/profile operativo en modo stub persistente
 - ejemplos tipados de feed y perfil
 - base de tema y shell movil
 - data layer compartida para queries y commands
@@ -64,11 +67,13 @@ Pasos previstos cuando se instalen dependencias:
 - `src/api/backend/stubs/` contiene los stubs temporales reales
 - `src/features/recommendations/` es descriptiva, no interactiva
 - la sesion actual es bootstrap tecnico, no login final de producto
+- el onboarding y perfil actual dependen del adapter `stub`, no de transporte HTTP real
 
 ## Validacion manual recomendada
 
 - la app arranca en Expo Router
 - la raiz redirige a `(auth)` si no hay sesion
-- al guardar una sesion local en modo stub, la shell autenticada abre
+- al guardar una sesion local en modo stub, la app pasa por onboarding y luego abre la shell autenticada
+- `profile.tsx` muestra owner profile y permite abrir la vista publica
 - las tabs navegan sin depender del legacy
 - las queries muestran stubs o errores claros, no integraciones falsas

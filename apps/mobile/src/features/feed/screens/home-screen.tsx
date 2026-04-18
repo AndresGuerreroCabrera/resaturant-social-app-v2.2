@@ -1,10 +1,12 @@
 import type { ComponentProps } from "react";
 import type { RecommendationFeedItemDto } from "@savory/contracts";
 import Feather from "@expo/vector-icons/Feather";
+import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 import { mapMobileBackendError } from "../../../api/backend/errors";
 import { theme } from "../../../app/theme";
+import { ActionButton } from "../../../app/ui/action-button";
 import { Panel } from "../../../app/ui/panel";
 import { Screen } from "../../../app/ui/screen";
 import { env } from "../../../config/env";
@@ -101,6 +103,18 @@ function FeedCard({ item }: { item: RecommendationFeedItemDto }) {
           {item.viewerReaction ?? "pending"}
         </Text>
       </View>
+      <ActionButton
+        label="View public profile"
+        onPress={() =>
+          router.push({
+            pathname: "/(app)/profiles/[userId]",
+            params: {
+              userId: item.author.userId
+            }
+          })
+        }
+        variant="ghost"
+      />
     </View>
   );
 }

@@ -9,6 +9,8 @@ import { Panel } from "../../../app/ui/panel";
 import { Screen } from "../../../app/ui/screen";
 import { env } from "../../../config/env";
 import { useAuthSession } from "../../auth/auth-session";
+import { resolveMobileSessionUserId } from "../../auth/session-user-id";
+import { ProfileSummaryCard } from "../components/profile-summary-card";
 import { useMyProfileQuery } from "../data/use-my-profile-query";
 
 export function ProfileScreen() {
@@ -23,14 +25,24 @@ export function ProfileScreen() {
     router.replace("/(auth)/sign-in");
   }
 
+  function handleOpenPublicProfile() {
+    router.push({
+      pathname: "/(app)/profiles/[userId]",
+      params: {
+        userId: resolveMobileSessionUserId(session?.userId)
+      }
+    });
+  }
+
   return (
     <Screen>
       <Panel>
-        <Text style={styles.kicker}>Profile shell</Text>
-        <Text style={styles.title}>Session-aware, but still backend-safe.</Text>
+        <Text style={styles.kicker}>My profile</Text>
+        <Text style={styles.title}>Private owner view over the v2 profile.</Text>
         <Text style={styles.body}>
-          This screen already separates private session state from public
-          profile data and keeps all future writes behind `apps/api`.
+          This screen reads the owner snapshot through `getMyProfile`, then lets
+          you inspect the public version separately. No direct table access is
+          exposed to mobile.
         </Text>
       </Panel>
 
@@ -47,14 +59,26 @@ export function ProfileScreen() {
           API base URL: {env.apiBaseUrl ?? "not configured"}
         </Text>
         <ActionButton
+          label="Open public profile view"
+          onPress={handleOpenPublicProfile}
+          variant="secondary"
+        />
+        <ActionButton
+          label={profileQuery.isFetching ? "Refreshing..." : "Refresh profile"}
+          onPress={() => {
+            void profileQuery.refetch();
+          }}
+          variant="ghost"
+        />
+        <ActionButton
           label="Clear local session"
           onPress={handleSignOut}
-          variant="secondary"
+          variant="ghost"
         />
       </Panel>
 
       <Panel>
-        <Text style={styles.sectionTitle}>My profile query</Text>
+        <Text style={styles.sectionTitle}>Owner profile snapshot</Text>
         {profileQuery.isLoading ? (
           <Text style={styles.body}>Loading profile snapshot...</Text>
         ) : null}
@@ -62,21 +86,11 @@ export function ProfileScreen() {
           <Text style={styles.errorText}>{mappedError.message}</Text>
         ) : null}
         {profileQuery.data ? (
-          <>
-            <Text style={styles.profileName}>
-              {profileQuery.data.publicProfile.displayName}
-            </Text>
-            <Text style={styles.body}>
-              @{profileQuery.data.publicProfile.handle}
-            </Text>
-            <Text style={styles.body}>
-              {profileQuery.data.publicProfile.bio}
-            </Text>
-            <Text style={styles.body}>
-              Reputation: {profileQuery.data.publicStats.reputationScore} (
-              {profileQuery.data.publicStats.expertiseLevelLabel})
-            </Text>
-          </>
+          <ProfileSummaryCard
+            privateProfile={profileQuery.data.privateProfile}
+            publicProfile={profileQuery.data.publicProfile}
+            publicStats={profileQuery.data.publicStats}
+          />
         ) : null}
       </Panel>
     </Screen>
@@ -116,11 +130,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 15,
     fontWeight: "600",
-    color: theme.colors.ink
-  },
-  profileName: {
-    fontSize: 22,
-    fontWeight: "700",
     color: theme.colors.ink
   },
   errorText: {

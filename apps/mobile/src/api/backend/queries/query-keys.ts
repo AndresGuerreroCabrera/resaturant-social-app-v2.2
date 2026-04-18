@@ -8,7 +8,8 @@ import type {
 } from "@savory/contracts";
 
 export const mobileQueryKeys = {
-  myProfile: () => ["mobile-backend", "query", "my-profile"] as const,
+  myProfile: (userId: string | null) =>
+    ["mobile-backend", "query", "my-profile", userId] as const,
   publicProfile: (input: GetPublicProfileQuery) =>
     ["mobile-backend", "query", "public-profile", input.profileUserId] as const,
   recommendationFeed: (input: ListRecommendationFeedQuery = {}) =>

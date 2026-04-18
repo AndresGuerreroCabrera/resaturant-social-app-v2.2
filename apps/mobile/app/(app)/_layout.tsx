@@ -1,19 +1,41 @@
 import Feather from "@expo/vector-icons/Feather";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs, router } from "expo-router";
 
 import { theme } from "../../src/app/theme";
 import { LoadingScreen } from "../../src/app/ui/loading-screen";
 import { useAuthSession } from "../../src/features/auth/auth-session";
+import { AccessGateErrorScreen } from "../../src/features/auth/screens/access-gate-error-screen";
+import { useProfileAccessGate } from "../../src/features/profile/data/use-profile-access-gate";
 
 export default function AppLayout() {
-  const { status } = useAuthSession();
+  const { clearSession } = useAuthSession();
+  const gate = useProfileAccessGate();
 
-  if (status === "hydrating") {
+  if (gate.status === "hydrating" || gate.status === "loading_profile") {
     return <LoadingScreen label="Preparing your app shell..." />;
   }
 
-  if (status !== "authenticated") {
+  if (gate.status === "anonymous") {
     return <Redirect href="/(auth)/sign-in" />;
+  }
+
+  if (gate.status === "error") {
+    return (
+      <AccessGateErrorScreen
+        message={gate.error.message}
+        onRetry={() => {
+          void gate.profileQuery.refetch();
+        }}
+        onClearSession={async () => {
+          await clearSession();
+          router.replace("/(auth)/sign-in");
+        }}
+      />
+    );
+  }
+
+  if (gate.status === "needs_onboarding") {
+    return <Redirect href="/(onboarding)/profile-setup" />;
   }
 
   return (
@@ -56,6 +78,12 @@ export default function AppLayout() {
           tabBarIcon: ({ color, size }) => (
             <Feather color={color} name="user" size={size} />
           )
+        }}
+      />
+      <Tabs.Screen
+        name="profiles/[userId]"
+        options={{
+          href: null
         }}
       />
     </Tabs>

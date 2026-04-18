@@ -22,6 +22,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - `apps/api` ya contiene una capa de comandos de backend sin runtime HTTP real
 - `apps/api` ya contiene una base asincrona interna de outbox/polling, pero todavia sin runtime ni handlers reales
 - `apps/mobile` ya tiene scaffold Expo real, pero todavia sin integracion end-to-end con `apps/api`
+- `apps/mobile` ya tiene un primer vertical slice auth/profile operativo en `stub mode` persistente
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
 - el legacy sigue teniendo backend embebido en navegador
@@ -414,6 +415,15 @@ Tener el nuevo frontend estrategico consumiendo v2.
 - las queries actuales de mobile ya no dependen de stubs dispersos por feature, sino de la data layer compartida
 - la fase queda iniciada a nivel de scaffold real y arquitectura interna, pero siguen pendientes auth real, endpoints reales y query side productivo
 
+**Notas de refuerzo (2026-04-18)**
+
+- se implemento el primer vertical slice funcional de mobile para auth, sesion persistente, onboarding minimo y perfil
+- el flujo ya encadena `sign-in -> onboarding -> shell autenticada` sin inventar runtime HTTP inexistente
+- `getMyProfile` y `getPublicProfile` funcionan en modo `stub` con almacenamiento local persistente por `userId`
+- `createOrUpdateProfile` se habilito en `stub` para sostener onboarding minimo e invalidacion basica
+- `profile.tsx` ya distingue owner profile frente a vista publica, y la home puede abrir perfiles publicos de autores del feed
+- sigue abierta la contradiccion operativa principal: el slice movil es real dentro del cliente, pero el transporte final hacia `apps/api` aun no existe
+
 ---
 
 ## Fase 8 - Preparar convivencia con backfill repetible
@@ -580,6 +590,6 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 4 - iniciada el 2026-04-14 y reforzada el 2026-04-15 con base asincrona durable; runtime `apps/api`, auth, adaptadores y handlers pendientes
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
 - [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
-- [ ] Fase 7 - iniciada el 2026-04-15 con scaffold Expo real, shell movil y cliente base; auth real e integracion con `apps/api` pendientes
+- [ ] Fase 7 - iniciada el 2026-04-15 y reforzada el 2026-04-18 con slice auth/profile operativo en `stub`; runtime HTTP real, auth final y siguientes vertical slices pendientes
 - [ ] Fase 8 - iniciada el 2026-04-15 con schema `backfill`, scripts SQL de backfill y runbook; rehearsal real y validacion en staging pendientes
 - [ ] Fase 9 - iniciada el 2026-04-15 a nivel de ADR y runbook; rehearsal completo, freeze real y ejecucion de produccion pendientes

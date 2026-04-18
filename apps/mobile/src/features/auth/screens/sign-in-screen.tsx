@@ -7,23 +7,30 @@ import { ActionButton } from "../../../app/ui/action-button";
 import { Panel } from "../../../app/ui/panel";
 import { Screen } from "../../../app/ui/screen";
 import { env } from "../../../config/env";
+import {
+  createStubAccessToken,
+  resolveMobileSessionUserId
+} from "../session-user-id";
 import { useAuthSession } from "../auth-session";
 
 export function SignInScreen() {
   const { saveSession } = useAuthSession();
   const [accessToken, setAccessToken] = useState("");
   const [userId, setUserId] = useState("");
+  const isStubMode = env.backendMode === "stub";
 
   async function handleStoreSession() {
     const trimmedToken = accessToken.trim();
+    const resolvedUserId = resolveMobileSessionUserId(userId);
 
-    if (!trimmedToken) {
+    if (!env.enableStubSession && !trimmedToken) {
       return;
     }
 
     await saveSession({
-      accessToken: trimmedToken,
-      userId: userId.trim() || null,
+      accessToken:
+        trimmedToken || createStubAccessToken(resolvedUserId),
+      userId: resolvedUserId,
       issuedAt: new Date().toISOString()
     });
 
@@ -59,34 +66,47 @@ export function SignInScreen() {
       <Panel>
         <Text style={styles.sectionTitle}>Development session bootstrap</Text>
         <Text style={styles.body}>
-          This stores a bearer token locally so the authenticated client can be
-          exercised once `apps/api` is reachable.
+          This slice can already start from a local stub session. Real token
+          exchange, refresh and backend-backed auth remain pending until the
+          `apps/api` runtime is available.
         </Text>
         <TextInput
           autoCapitalize="none"
           autoCorrect={false}
           editable={env.enableStubSession}
-          placeholder="Paste a bearer token"
-          placeholderTextColor="#95897d"
-          style={styles.input}
-          value={accessToken}
-          onChangeText={setAccessToken}
-        />
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          editable={env.enableStubSession}
-          placeholder="Optional user id"
+          placeholder="Optional user id for this local session"
           placeholderTextColor="#95897d"
           style={styles.input}
           value={userId}
           onChangeText={setUserId}
         />
+        {!isStubMode ? (
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            editable={env.enableStubSession}
+            placeholder="Paste a bearer token"
+            placeholderTextColor="#95897d"
+            style={styles.input}
+            value={accessToken}
+            onChangeText={setAccessToken}
+          />
+        ) : (
+          <Text style={styles.body}>
+            In `stub` mode, the app generates a local development token and
+            persists it securely together with the chosen user id.
+          </Text>
+        )}
         <ActionButton
-          disabled={!env.enableStubSession || accessToken.trim().length === 0}
+          disabled={
+            !env.enableStubSession ||
+            (!isStubMode && accessToken.trim().length === 0)
+          }
           label={
             env.enableStubSession
-              ? "Store local session"
+              ? isStubMode
+                ? "Continue with local stub session"
+                : "Store local session"
               : "Backend auth pending"
           }
           onPress={handleStoreSession}

@@ -2,15 +2,34 @@ import { Redirect } from "expo-router";
 
 import { LoadingScreen } from "../src/app/ui/loading-screen";
 import { useAuthSession } from "../src/features/auth/auth-session";
+import { AccessGateErrorScreen } from "../src/features/auth/screens/access-gate-error-screen";
+import { useProfileAccessGate } from "../src/features/profile/data/use-profile-access-gate";
 
 export default function IndexScreen() {
-  const { status } = useAuthSession();
+  const { clearSession } = useAuthSession();
+  const gate = useProfileAccessGate();
 
-  if (status === "hydrating") {
+  if (gate.status === "hydrating" || gate.status === "loading_profile") {
     return <LoadingScreen label="Restoring your mobile workspace..." />;
   }
 
-  if (status === "authenticated") {
+  if (gate.status === "error") {
+    return (
+      <AccessGateErrorScreen
+        message={gate.error.message}
+        onRetry={() => {
+          void gate.profileQuery.refetch();
+        }}
+        onClearSession={clearSession}
+      />
+    );
+  }
+
+  if (gate.status === "needs_onboarding") {
+    return <Redirect href="/(onboarding)/profile-setup" />;
+  }
+
+  if (gate.status === "ready") {
     return <Redirect href="/(app)/home" />;
   }
 

@@ -42,6 +42,7 @@ apps/mobile/src/api/backend/
     create-stub-query-access.ts
     create-stub-command-access.ts
     stub-data.ts
+    stub-profile-store.ts
   http/
     create-http-query-access.ts
     create-http-command-access.ts
@@ -167,7 +168,8 @@ Modo por defecto y seguro para la fase actual.
 Comportamiento:
 
 - algunas queries sirven datos tipados de ejemplo
-- los commands no se simulan
+- el slice auth/profile usa un store local persistente encapsulado
+- `createOrUpdateProfile` solo se habilita en `stub` para sostener onboarding minimo y perfil
 - las operaciones no disponibles fallan de forma explicita con `runtime_not_ready`
 
 Decision cerrada:
@@ -194,12 +196,14 @@ Decision cerrada:
 Stubs reales implementados:
 
 - `getMyProfile`
+- `getPublicProfile`
 - `listRecommendationFeed`
+- `createOrUpdateProfile`
 
 Operaciones explicitamente no listas todavia:
 
 - el resto de queries
-- todos los commands
+- el resto de commands
 
 ## Query keys
 
@@ -211,6 +215,7 @@ Motivo:
 
 - evitar claves ad hoc por feature
 - facilitar invalidacion consistente cuando entren mutations reales
+- aislar correctamente la cache de `getMyProfile` por `sessionUserId`
 
 ## Tradeoffs
 

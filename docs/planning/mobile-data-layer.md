@@ -22,6 +22,7 @@ Tambien se actualizaron:
 - `app.config.ts`
 - `src/config/env.ts`
 - hooks de `feed` y `profile` para consumir la capa compartida
+- adapter `stub` para soportar el primer slice auth/profile sin fingir runtime HTTP
 
 ## Que se separo claramente
 
@@ -41,7 +42,8 @@ Tambien se actualizaron:
 
 - viven detras de `commands`
 - siguen el catalogo de `ADR 007`
-- no se simulan como si fueran operaciones reales
+- solo `createOrUpdateProfile` se habilita en `stub` para sostener onboarding minimo
+- el resto sigue fallando de forma explicita hasta que exista runtime real
 
 ### Mapping
 
@@ -58,19 +60,21 @@ Tambien se actualizaron:
 Stubs activos:
 
 - `getMyProfile`
+- `getPublicProfile`
 - `listRecommendationFeed`
+- `createOrUpdateProfile`
 
 No listos aun:
 
 - resto de queries
-- todos los commands
+- resto de commands
 
 ## Que depende del runtime real de `apps/api`
 
 - rutas HTTP reales
 - auth y actor context de verdad
 - payloads y responses reales sobre red
-- invalidacion real tras commands
+- invalidacion real tras commands mas alla del slice auth/profile
 - slices verticales de places, user-place, friendships y recomendaciones
 
 ## Como operar la capa hoy
@@ -90,11 +94,11 @@ Modos:
 
 - el adapter `http` todavia no implementa endpoints reales
 - el modo `http` sin `EXPO_PUBLIC_API_BASE_URL` ya falla como error de configuracion explicito
-- los commands estan fijados, pero no ejercitados en transporte
+- salvo `createOrUpdateProfile` en stub, los commands siguen sin ejercitarse en transporte
 - la app puede arrancar en modo `http` antes de tiempo si la configuracion se cambia sin tener runtime disponible
 
 ## Siguiente paso recomendado
 
-- definir el routing HTTP real de `apps/api`
-- conectar primero queries reales de perfil y feed
-- despues conectar los primeros commands de perfil y user-place
+- publicar el runtime HTTP real de `apps/api` para perfil/auth
+- conectar este mismo slice auth/profile al adapter `http`
+- despues continuar con user-place y vertical slices de producto
