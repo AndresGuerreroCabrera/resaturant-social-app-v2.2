@@ -52,6 +52,7 @@ apps/mobile/
       ui/
       theme.ts
     api/
+      backend/
       http-client.ts
       query-client.ts
       use-api-client.ts
@@ -129,6 +130,21 @@ Decision cerrada:
 - `apps/mobile` no incorpora SDKs de acceso directo al schema `app`
 - todo acceso futuro de negocio pasa por `apps/api`
 
+## Capa compartida de data access
+
+Sobre el cliente HTTP base se monta una capa compartida en:
+
+- `src/api/backend/`
+
+Su responsabilidad es:
+
+- separar queries y commands
+- encapsular adapters temporales
+- validar payloads con contratos compartidos
+- desacoplar las features del detalle temporal `stub | http`
+
+El detalle de esta capa se fija en `adr/012-mobile-data-access.md`.
+
 ## Relacion con `@savory/contracts` y `@savory/domain`
 
 La app usa los paquetes compartidos para:
@@ -166,6 +182,7 @@ Valores iniciales:
 
 - `EXPO_PUBLIC_APP_ENV`
 - `EXPO_PUBLIC_API_BASE_URL`
+- `EXPO_PUBLIC_MOBILE_BACKEND_MODE`
 - `EXPO_PUBLIC_ENABLE_STUB_SESSION`
 
 ## Monorepo y consumo de paquetes workspace

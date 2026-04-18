@@ -46,6 +46,7 @@ export function SignInScreen() {
         <Text style={styles.sectionTitle}>Current mobile mode</Text>
         <View style={styles.list}>
           <Text style={styles.listItem}>App env: {env.appEnv}</Text>
+          <Text style={styles.listItem}>Backend mode: {env.backendMode}</Text>
           <Text style={styles.listItem}>
             API base URL: {env.apiBaseUrl ?? "not configured"}
           </Text>

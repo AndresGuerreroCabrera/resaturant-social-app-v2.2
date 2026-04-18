@@ -409,6 +409,9 @@ Tener el nuevo frontend estrategico consumiendo v2.
 - la sesion base ya usa secure storage en nativo y fallback web
 - `apps/mobile` ya consume `@savory/contracts` y `@savory/domain` como fuente compartida de verdad
 - las pantallas iniciales usan stubs tipados y validados para no fingir integracion con un runtime HTTP todavia inexistente
+- se creo una capa compartida `src/api/backend/` con separacion explicita entre `queries` y `commands`
+- se fijaron adapters temporales `stub | http` para evitar acceso caotico al backend mientras el runtime real aun no existe
+- las queries actuales de mobile ya no dependen de stubs dispersos por feature, sino de la data layer compartida
 - la fase queda iniciada a nivel de scaffold real y arquitectura interna, pero siguen pendientes auth real, endpoints reales y query side productivo
 
 ---

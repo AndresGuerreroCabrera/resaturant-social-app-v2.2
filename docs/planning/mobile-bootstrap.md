@@ -17,12 +17,14 @@ esperar a que `apps/api` este 100% operativo.
 - almacenamiento de sesion con secure storage en nativo
 - cliente HTTP autenticado base
 - pantallas y queries iniciales en modo stub tipado
+- capa compartida `src/api/backend/` con adapters `stub | http`, query keys y separacion query/command
 
 ## Como queda organizada la app
 
 - `app/` contiene rutas y grupos de navegacion
 - `src/app/` contiene providers, tema y componentes de shell
 - `src/api/` contiene acceso a datos y cache
+- `src/api/backend/` contiene la capa compartida de data access
 - `src/features/` separa slices funcionales
 - `src/config/` resuelve entorno
 
@@ -35,6 +37,7 @@ Pasos previstos cuando se instalen dependencias:
 3. configurar si hace falta:
    - `EXPO_PUBLIC_APP_ENV`
    - `EXPO_PUBLIC_API_BASE_URL`
+   - `EXPO_PUBLIC_MOBILE_BACKEND_MODE`
    - `EXPO_PUBLIC_ENABLE_STUB_SESSION`
 
 ## Que cubre hoy
@@ -44,6 +47,7 @@ Pasos previstos cuando se instalen dependencias:
 - boundary claro hacia `apps/api`
 - ejemplos tipados de feed y perfil
 - base de tema y shell movil
+- data layer compartida para queries y commands
 
 ## Que sigue pendiente
 
@@ -57,7 +61,7 @@ Pasos previstos cuando se instalen dependencias:
 
 ## Carpetas o piezas que siguen siendo preparacion
 
-- `src/features/feed/` y `src/features/profile/` aun usan stubs validados
+- `src/api/backend/stubs/` contiene los stubs temporales reales
 - `src/features/recommendations/` es descriptiva, no interactiva
 - la sesion actual es bootstrap tecnico, no login final de producto
 

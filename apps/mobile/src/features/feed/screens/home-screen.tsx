@@ -3,6 +3,7 @@ import type { RecommendationFeedItemDto } from "@savory/contracts";
 import Feather from "@expo/vector-icons/Feather";
 import { StyleSheet, Text, View } from "react-native";
 
+import { mapMobileBackendError } from "../../../api/backend/errors";
 import { theme } from "../../../app/theme";
 import { Panel } from "../../../app/ui/panel";
 import { Screen } from "../../../app/ui/screen";
@@ -13,6 +14,9 @@ import { useRecommendationFeedQuery } from "../data/use-recommendation-feed-quer
 export function HomeScreen() {
   const { session } = useAuthSession();
   const feedQuery = useRecommendationFeedQuery();
+  const mappedError = feedQuery.error
+    ? mapMobileBackendError(feedQuery.error)
+    : null;
 
   return (
     <Screen>
@@ -48,8 +52,8 @@ export function HomeScreen() {
           <Text style={styles.caption}>Loading stub feed...</Text>
         ) : null}
 
-        {feedQuery.error ? (
-          <Text style={styles.errorText}>{feedQuery.error.message}</Text>
+        {mappedError ? (
+          <Text style={styles.errorText}>{mappedError.message}</Text>
         ) : null}
 
         {feedQuery.data?.items.map((item) => (

@@ -2,6 +2,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
+import { mapMobileBackendError } from "../../../api/backend/errors";
 import { theme } from "../../../app/theme";
 import { ActionButton } from "../../../app/ui/action-button";
 import { Panel } from "../../../app/ui/panel";
@@ -13,6 +14,9 @@ import { useMyProfileQuery } from "../data/use-my-profile-query";
 export function ProfileScreen() {
   const { session, clearSession } = useAuthSession();
   const profileQuery = useMyProfileQuery();
+  const mappedError = profileQuery.error
+    ? mapMobileBackendError(profileQuery.error)
+    : null;
 
   async function handleSignOut() {
     await clearSession();
@@ -54,8 +58,8 @@ export function ProfileScreen() {
         {profileQuery.isLoading ? (
           <Text style={styles.body}>Loading profile snapshot...</Text>
         ) : null}
-        {profileQuery.error ? (
-          <Text style={styles.errorText}>{profileQuery.error.message}</Text>
+        {mappedError ? (
+          <Text style={styles.errorText}>{mappedError.message}</Text>
         ) : null}
         {profileQuery.data ? (
           <>

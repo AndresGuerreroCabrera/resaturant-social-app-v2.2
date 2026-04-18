@@ -17,17 +17,19 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 9. `adr/009-outbox-and-jobs.md`
 10. `adr/010-cutover-strategy.md`
 11. `adr/011-mobile-app-architecture.md`
-12. `planning/migration-phases.md`
-13. `planning/mobile-bootstrap.md`
-14. `planning/backend-commands-implementation.md`
-15. `planning/async-processing.md`
-16. `planning/sql-migrations-v2.md`
-17. `planning/contracts-and-domain-packages.md`
-18. `planning/repo-reorganization.md`
-19. `planning/repo-bootstrap.md`
-20. `planning/backfill-plan.md`
-21. `cutover/backfill-runbook.md`
-22. `cutover/cutover-runbook.md`
+12. `adr/012-mobile-data-access.md`
+13. `planning/migration-phases.md`
+14. `planning/mobile-bootstrap.md`
+15. `planning/mobile-data-layer.md`
+16. `planning/backend-commands-implementation.md`
+17. `planning/async-processing.md`
+18. `planning/sql-migrations-v2.md`
+19. `planning/contracts-and-domain-packages.md`
+20. `planning/repo-reorganization.md`
+21. `planning/repo-bootstrap.md`
+22. `planning/backfill-plan.md`
+23. `cutover/backfill-runbook.md`
+24. `cutover/cutover-runbook.md`
 
 ## Que contiene cada carpeta
 
@@ -93,11 +95,13 @@ Aqui van:
 - `adr/009-outbox-and-jobs.md`
 - `adr/010-cutover-strategy.md`
 - `adr/011-mobile-app-architecture.md`
+- `adr/012-mobile-data-access.md`
 
 ### Fuente de verdad operativa
 
 - `planning/migration-phases.md`
 - `planning/mobile-bootstrap.md`
+- `planning/mobile-data-layer.md`
 - `planning/backend-commands-implementation.md`
 - `planning/async-processing.md`
 - `planning/sql-migrations-v2.md`
@@ -134,7 +138,8 @@ Estado de documentacion actualizado tras:
 - implementacion del soporte de backfill v1 -> v2 con schema `backfill`, scripts SQL reejecutables y runbook operativo
 - cierre de la estrategia de cutover con dos etapas, freeze corto y legado deprecado tras el cambio de sistema de verdad
 - bootstrap real de `apps/mobile` con Expo Router, TypeScript, React Query y cliente base hacia `apps/api`
+- implementacion de una capa compartida de data access en mobile con adapters `stub | http`, query keys y separacion query/command
 
 Proximo paso recomendado:
 
-- cablear el runtime real de `apps/api` y empezar la primera integracion movil real contra ese boundary, manteniendo en paralelo el rehearsal de backfill y cutover en staging
+- definir el routing HTTP real de `apps/api` y conectar los primeros vertical slices moviles sobre la nueva data layer, manteniendo en paralelo el rehearsal de backfill y cutover en staging
