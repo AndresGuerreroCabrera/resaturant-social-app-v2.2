@@ -56,9 +56,9 @@ export default function AppLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          title: "Places",
           tabBarIcon: ({ color, size }) => (
-            <Feather color={color} name="home" size={size} />
+            <Feather color={color} name="map-pin" size={size} />
           )
         }}
       />

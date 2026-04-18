@@ -56,8 +56,8 @@ conectarse despues a `apps/api`.
 ### 5. Perfil publico
 
 - `profiles/[userId].tsx` consume `getPublicProfile`
-- desde la home se puede abrir el perfil publico del autor de una recomendacion
 - desde `profile.tsx` se puede abrir la version publica del perfil propio
+- la ruta publica queda lista para volver a enlazarse desde recomendaciones/feed cuando ese slice entre en alcance
 
 ## Dependencias de este slice
 

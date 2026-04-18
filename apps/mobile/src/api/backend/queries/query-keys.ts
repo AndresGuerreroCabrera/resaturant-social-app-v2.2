@@ -10,6 +10,8 @@ import type {
 export const mobileQueryKeys = {
   myProfile: (userId: string | null) =>
     ["mobile-backend", "query", "my-profile", userId] as const,
+  place: (placeId: string) =>
+    ["mobile-backend", "query", "place", placeId] as const,
   publicProfile: (input: GetPublicProfileQuery) =>
     ["mobile-backend", "query", "public-profile", input.profileUserId] as const,
   recommendationFeed: (input: ListRecommendationFeedQuery = {}) =>
@@ -20,11 +22,15 @@ export const mobileQueryKeys = {
       input.cursor ?? null,
       input.limit ?? null
     ] as const,
-  userPlaceEntries: (input: ListMyUserPlaceEntriesQuery) =>
+  userPlaceEntries: (
+    sessionUserId: string | null,
+    input: ListMyUserPlaceEntriesQuery
+  ) =>
     [
       "mobile-backend",
       "query",
       "user-place-entries",
+      sessionUserId,
       input.list,
       input.cursor ?? null,
       input.limit ?? null

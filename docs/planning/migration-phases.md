@@ -23,6 +23,7 @@ Migrar el MVP web actual a una arquitectura seria y mantenible con:
 - `apps/api` ya contiene una base asincrona interna de outbox/polling, pero todavia sin runtime ni handlers reales
 - `apps/mobile` ya tiene scaffold Expo real, pero todavia sin integracion end-to-end con `apps/api`
 - `apps/mobile` ya tiene un primer vertical slice auth/profile operativo en `stub mode` persistente
+- `apps/mobile` ya tiene un segundo vertical slice de places/listas personales operativo en `stub mode` persistente
 - `packages/contracts` y `packages/domain` ya contienen una primera implementacion compartida del dominio y del boundary
 - el legacy sigue siendo un frontend estatico multipagina
 - el legacy sigue teniendo backend embebido en navegador
@@ -421,8 +422,17 @@ Tener el nuevo frontend estrategico consumiendo v2.
 - el flujo ya encadena `sign-in -> onboarding -> shell autenticada` sin inventar runtime HTTP inexistente
 - `getMyProfile` y `getPublicProfile` funcionan en modo `stub` con almacenamiento local persistente por `userId`
 - `createOrUpdateProfile` se habilito en `stub` para sostener onboarding minimo e invalidacion basica
-- `profile.tsx` ya distingue owner profile frente a vista publica, y la home puede abrir perfiles publicos de autores del feed
+- `profile.tsx` ya distingue owner profile frente a vista publica, y la ruta publica `profiles/[userId]` queda lista para enlazarse desde slices posteriores
 - sigue abierta la contradiccion operativa principal: el slice movil es real dentro del cliente, pero el transporte final hacia `apps/api` aun no existe
+
+**Notas de refuerzo (2026-04-18, slice places)**
+
+- la home tab paso a cubrir el flujo central de `UserPlaceEntry`
+- mobile ya soporta `searchPlaces`, `resolvePlace`, `savePlaceToWishlist`, `markPlaceVisited` y `listMyUserPlaceEntries` en modo `stub`
+- la resolucion de `place` ya distingue reutilizacion canonica, reutilizacion por proveedor y creacion controlada
+- el flujo `wishlist -> visited` queda ejercitado en mobile sin meter logica sensible fuera del boundary acordado
+- la cache personal de `user-place` ya queda aislada por `sessionUserId`
+- siguen pendientes runtime HTTP real, auth final y el siguiente vertical slice de recomendaciones/feed
 
 ---
 
@@ -590,6 +600,6 @@ No construir `apps/mobile` antes de tener:
 - [ ] Fase 4 - iniciada el 2026-04-14 y reforzada el 2026-04-15 con base asincrona durable; runtime `apps/api`, auth, adaptadores y handlers pendientes
 - [ ] Fase 5 - iniciada el 2026-04-14 a nivel de capa de comandos; endpoints y query side pendientes
 - [ ] Fase 6 - iniciada el 2026-04-14 y reforzada el 2026-04-15 en recomendaciones/reputacion; feed/read side, consumers del outbox y runtime siguen pendientes
-- [ ] Fase 7 - iniciada el 2026-04-15 y reforzada el 2026-04-18 con slice auth/profile operativo en `stub`; runtime HTTP real, auth final y siguientes vertical slices pendientes
+- [ ] Fase 7 - iniciada el 2026-04-15 y reforzada el 2026-04-18 con slices auth/profile y places/listas personales operativos en `stub`; runtime HTTP real, auth final y slice de recomendaciones/feed pendientes
 - [ ] Fase 8 - iniciada el 2026-04-15 con schema `backfill`, scripts SQL de backfill y runbook; rehearsal real y validacion en staging pendientes
 - [ ] Fase 9 - iniciada el 2026-04-15 a nivel de ADR y runbook; rehearsal completo, freeze real y ejecucion de produccion pendientes

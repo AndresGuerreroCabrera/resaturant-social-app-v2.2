@@ -26,11 +26,14 @@ Base real de la app movil nueva en `apps/mobile`.
 - auth local base lista con secure storage en nativo
 - cliente HTTP autenticado base listo
 - primer vertical slice auth/profile operativo en modo stub persistente
+- segundo vertical slice de places y listas personales operativo en modo stub persistente
 - lectura de perfil publico y privado ya conectada a la mobile data layer
+- busqueda de lugar, resolucion de `place`, wishlist, visited y lectura de estados personales ya conectadas a la mobile data layer
 
 ## Lo que sigue pendiente
 
 - runtime HTTP real de `apps/api`
 - auth real extremo a extremo
-- comandos y queries conectados a endpoints reales
+- commands y queries conectados a endpoints reales
+- slice de recomendaciones/feed apoyado sobre visitas reales
 - push, offline y media fuera de alcance por ahora

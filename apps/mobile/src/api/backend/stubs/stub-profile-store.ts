@@ -14,6 +14,7 @@ import { z } from "zod";
 
 import { ApiResponseError } from "../../errors";
 import { stubMyProfileResponse, stubRecommendationFeedResponse } from "./stub-data";
+import { countPublicVisitedEntriesForUser } from "./stub-place-store";
 
 const STORAGE_KEY = "savory.mobile.stub-profile-store";
 
@@ -144,6 +145,20 @@ function buildPublicProfileResponse(
   });
 }
 
+async function applyDerivedPublicStats(profile: MyProfileResponse) {
+  const publicVisitedCount = await countPublicVisitedEntriesForUser(
+    profile.publicProfile.userId
+  );
+
+  return myProfileResponseSchema.parse({
+    ...profile,
+    publicStats: {
+      ...profile.publicStats,
+      publicVisitedCount
+    }
+  });
+}
+
 export async function loadOrCreateStubMyProfile(
   userId: string
 ): Promise<MyProfileResponse> {
@@ -151,7 +166,7 @@ export async function loadOrCreateStubMyProfile(
   const storedProfile = store.profilesByUserId[userId];
 
   if (storedProfile) {
-    return myProfileResponseSchema.parse(storedProfile);
+    return applyDerivedPublicStats(myProfileResponseSchema.parse(storedProfile));
   }
 
   const seedProfile = seedProfilesByUserId[userId] ?? createDefaultProfile(userId);
@@ -165,7 +180,7 @@ export async function loadOrCreateStubMyProfile(
 
   await persistStore(nextStore);
 
-  return seedProfile;
+  return applyDerivedPublicStats(seedProfile);
 }
 
 export async function loadStubPublicProfile(
@@ -182,7 +197,7 @@ export async function loadStubPublicProfile(
     });
   }
 
-  return buildPublicProfileResponse(profile);
+  return buildPublicProfileResponse(await applyDerivedPublicStats(profile));
 }
 
 export async function saveStubProfileMutation(

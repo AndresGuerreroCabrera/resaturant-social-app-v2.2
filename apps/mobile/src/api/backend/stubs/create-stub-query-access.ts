@@ -14,6 +14,11 @@ import {
   loadOrCreateStubMyProfile,
   loadStubPublicProfile
 } from "./stub-profile-store";
+import {
+  getStubPlace,
+  listStubUserPlaceEntries,
+  searchStubPlaces
+} from "./stub-place-store";
 
 interface StubAccessOptions {
   sessionUserId: string | null;
@@ -58,20 +63,26 @@ export function createStubQueryAccess({
       return stubRecommendationFeedResponse;
     },
     async listMyUserPlaceEntries(input) {
-      mapListMyUserPlaceEntriesQuery(input);
-      createStubOnlyNotReady("listMyUserPlaceEntries");
+      const parsedInput = mapListMyUserPlaceEntriesQuery(input);
+      await wait(140);
+      return listStubUserPlaceEntries(
+        requireSessionUserId(sessionUserId),
+        parsedInput
+      );
     },
     async listMyFriendships(input) {
       mapListMyFriendshipsQuery(input);
       createStubOnlyNotReady("listMyFriendships");
     },
     async searchPlaces(input) {
-      mapSearchPlacesQuery(input);
-      createStubOnlyNotReady("searchPlaces");
+      const parsedInput = mapSearchPlacesQuery(input);
+      await wait(180);
+      return searchStubPlaces(parsedInput);
     },
     async getPlace(input) {
-      mapGetPlaceQuery(input);
-      createStubOnlyNotReady("getPlace");
+      const parsedInput = mapGetPlaceQuery(input);
+      await wait(120);
+      return getStubPlace(parsedInput.placeId);
     },
     async listMyRecommendationPosts(input) {
       mapListMyRecommendationPostsQuery(input);

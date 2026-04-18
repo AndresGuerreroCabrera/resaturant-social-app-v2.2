@@ -22,15 +22,16 @@ Si retomas el proyecto desde cero o desde una sesion nueva, lee en este orden:
 14. `planning/mobile-bootstrap.md`
 15. `planning/mobile-data-layer.md`
 16. `planning/mobile-slice-auth-profile.md`
-17. `planning/backend-commands-implementation.md`
-18. `planning/async-processing.md`
-19. `planning/sql-migrations-v2.md`
-20. `planning/contracts-and-domain-packages.md`
-21. `planning/repo-reorganization.md`
-22. `planning/repo-bootstrap.md`
-23. `planning/backfill-plan.md`
-24. `cutover/backfill-runbook.md`
-25. `cutover/cutover-runbook.md`
+17. `planning/mobile-slice-places-and-personal-lists.md`
+18. `planning/backend-commands-implementation.md`
+19. `planning/async-processing.md`
+20. `planning/sql-migrations-v2.md`
+21. `planning/contracts-and-domain-packages.md`
+22. `planning/repo-reorganization.md`
+23. `planning/repo-bootstrap.md`
+24. `planning/backfill-plan.md`
+25. `cutover/backfill-runbook.md`
+26. `cutover/cutover-runbook.md`
 
 ## Que contiene cada carpeta
 
@@ -104,6 +105,7 @@ Aqui van:
 - `planning/mobile-bootstrap.md`
 - `planning/mobile-data-layer.md`
 - `planning/mobile-slice-auth-profile.md`
+- `planning/mobile-slice-places-and-personal-lists.md`
 - `planning/backend-commands-implementation.md`
 - `planning/async-processing.md`
 - `planning/sql-migrations-v2.md`
@@ -142,7 +144,8 @@ Estado de documentacion actualizado tras:
 - bootstrap real de `apps/mobile` con Expo Router, TypeScript, React Query y cliente base hacia `apps/api`
 - implementacion de una capa compartida de data access en mobile con adapters `stub | http`, query keys y separacion query/command
 - implementacion del primer vertical slice movil de auth/perfil con onboarding minimo y lectura publica/privada sobre adapter `stub`
+- implementacion del segundo vertical slice movil de places con busqueda, resolucion canonica, wishlist, visited y lectura de listas personales sobre adapter `stub`
 
 Proximo paso recomendado:
 
-- levantar el runtime HTTP real de `apps/api` para auth/perfil y conectar este primer vertical slice movil sin perder la separacion actual entre `stub` y `http`, manteniendo en paralelo el rehearsal de backfill y cutover en staging
+- levantar el runtime HTTP real de `apps/api` para auth, profile, places y user-place, conectar esos slices moviles al adapter `http` sin romper la separacion actual `stub | http` y despues abrir el slice de recomendaciones/feed, manteniendo en paralelo el rehearsal de backfill y cutover en staging

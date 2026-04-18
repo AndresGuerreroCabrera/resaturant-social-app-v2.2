@@ -12,6 +12,11 @@ import {
 import { ApiAuthenticationError, ApiRuntimeNotReadyError } from "../../errors";
 import type { MobileCommandAccess } from "../interfaces";
 import { saveStubProfileMutation } from "./stub-profile-store";
+import {
+  markStubPlaceVisited,
+  resolveStubPlace,
+  saveStubPlaceToWishlist
+} from "./stub-place-store";
 
 interface StubAccessOptions {
   sessionUserId: string | null;
@@ -38,8 +43,8 @@ export function createStubCommandAccess({
 }: StubAccessOptions): MobileCommandAccess {
   return {
     async resolvePlace(input) {
-      resolvePlaceCommandSchema.parse(input);
-      createStubCommandNotReady("resolvePlace");
+      const parsedInput = resolvePlaceCommandSchema.parse(input);
+      return resolveStubPlace(parsedInput);
     },
     async createOrUpdateProfile(input) {
       const parsedInput = createOrUpdateProfileCommandSchema.parse(input);
@@ -49,12 +54,18 @@ export function createStubCommandAccess({
       );
     },
     async savePlaceToWishlist(input) {
-      savePlaceToWishlistCommandSchema.parse(input);
-      createStubCommandNotReady("savePlaceToWishlist");
+      const parsedInput = savePlaceToWishlistCommandSchema.parse(input);
+      return saveStubPlaceToWishlist(
+        requireSessionUserId(sessionUserId),
+        parsedInput
+      );
     },
     async markPlaceVisited(input) {
-      markPlaceVisitedCommandSchema.parse(input);
-      createStubCommandNotReady("markPlaceVisited");
+      const parsedInput = markPlaceVisitedCommandSchema.parse(input);
+      return markStubPlaceVisited(
+        requireSessionUserId(sessionUserId),
+        parsedInput
+      );
     },
     async publishRecommendation(input) {
       publishRecommendationCommandSchema.parse(input);

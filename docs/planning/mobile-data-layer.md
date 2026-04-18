@@ -16,13 +16,15 @@ queries, stubs y futuros commands repartidos por features.
 - `src/api/backend/queries/query-keys.ts`
 - adapter `stub`
 - adapter `http` explicitamente pendiente
+- `stub-place-store.ts` para sostener la slice de places y listas personales
 
 Tambien se actualizaron:
 
 - `app.config.ts`
 - `src/config/env.ts`
 - hooks de `feed` y `profile` para consumir la capa compartida
-- adapter `stub` para soportar el primer slice auth/profile sin fingir runtime HTTP
+- hooks de `places` y `user-place` para consumir la capa compartida
+- adapter `stub` para soportar los slices de auth/profile y places sin fingir runtime HTTP
 
 ## Que se separo claramente
 
@@ -42,7 +44,7 @@ Tambien se actualizaron:
 
 - viven detras de `commands`
 - siguen el catalogo de `ADR 007`
-- solo `createOrUpdateProfile` se habilita en `stub` para sostener onboarding minimo
+- `createOrUpdateProfile`, `resolvePlace`, `savePlaceToWishlist` y `markPlaceVisited` ya se habilitan en `stub`
 - el resto sigue fallando de forma explicita hasta que exista runtime real
 
 ### Mapping
@@ -62,20 +64,30 @@ Stubs activos:
 - `getMyProfile`
 - `getPublicProfile`
 - `listRecommendationFeed`
+- `searchPlaces`
+- `getPlace`
+- `listMyUserPlaceEntries`
 - `createOrUpdateProfile`
+- `resolvePlace`
+- `savePlaceToWishlist`
+- `markPlaceVisited`
 
 No listos aun:
 
-- resto de queries
-- resto de commands
+- `listMyFriendships`
+- `listMyRecommendationPosts`
+- `publishRecommendation`
+- `respondToRecommendation`
+- `addFriend`
+- `removeFriend`
 
 ## Que depende del runtime real de `apps/api`
 
 - rutas HTTP reales
 - auth y actor context de verdad
 - payloads y responses reales sobre red
-- invalidacion real tras commands mas alla del slice auth/profile
-- slices verticales de places, user-place, friendships y recomendaciones
+- invalidacion real sobre red de profile y user-place
+- slices verticales de friendships y recomendaciones/feed
 
 ## Como operar la capa hoy
 
@@ -94,11 +106,11 @@ Modos:
 
 - el adapter `http` todavia no implementa endpoints reales
 - el modo `http` sin `EXPO_PUBLIC_API_BASE_URL` ya falla como error de configuracion explicito
-- salvo `createOrUpdateProfile` en stub, los commands siguen sin ejercitarse en transporte
+- el transporte real de profile y user-place sigue sin ejercitarse fuera del adapter `stub`
 - la app puede arrancar en modo `http` antes de tiempo si la configuracion se cambia sin tener runtime disponible
 
 ## Siguiente paso recomendado
 
-- publicar el runtime HTTP real de `apps/api` para perfil/auth
-- conectar este mismo slice auth/profile al adapter `http`
-- despues continuar con user-place y vertical slices de producto
+- publicar el runtime HTTP real de `apps/api` para perfil, places y user-place
+- conectar estos mismos slices auth/profile y places/listas personales al adapter `http`
+- despues continuar con recomendaciones/feed y social

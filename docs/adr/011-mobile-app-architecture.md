@@ -62,6 +62,7 @@ apps/mobile/
     features/
       auth/
       feed/
+      places/
       profile/
       recommendations/
   app.config.ts
@@ -80,7 +81,7 @@ Se adopta Expo Router con dos grupos principales:
 
 La shell autenticada usa tabs ligeras:
 
-- `home`
+- `home` para el flujo central de places y listas personales
 - `recommendations`
 - `profile`
 
@@ -166,10 +167,10 @@ Esto evita:
 
 Mientras `apps/api` no tenga runtime HTTP completo:
 
-- las queries de ejemplo viven en modo stub
+- las slices iniciales de profile y places viven en modo stub
 - las respuestas stub siguen validandose contra `@savory/contracts`
 - si se configura `EXPO_PUBLIC_API_BASE_URL`, las pantallas dejan de fingir integracion y muestran claramente que el runtime aun falta
-- el primer vertical slice auth/profile puede funcionar de forma honesta en `stub` gracias a un store local persistente encapsulado dentro de `src/api/backend/stubs/`
+- los primeros vertical slices pueden funcionar de forma honesta en `stub` gracias a stores locales persistentes encapsulados dentro de `src/api/backend/stubs/`
 
 Decision cerrada:
 
@@ -204,7 +205,7 @@ En esta fase quedan intencionalmente pendientes:
 - auth real extremo a extremo
 - endpoints HTTP reales de `apps/api`
 - mutaciones de negocio
-- query side real para feed, profile, places y user-place
+- query side real para feed, friendships y recomendaciones
 - offline real
 - push notifications
 - media upload
@@ -223,6 +224,22 @@ Decision cerrada:
 
 - ese slice puede operar hoy solo en `stub mode`
 - no se finge todavia un login final ni un runtime HTTP que aun no existe
+
+## Slice places y listas personales inicial
+
+El segundo slice funcional de mobile queda resuelto con:
+
+- busqueda de lugar
+- resolucion o creacion de `place` canonico
+- guardado en wishlist
+- promocion `wishlist -> visited`
+- lectura de mis estados `wishlist | visited | hidden`
+
+Decision cerrada:
+
+- la home tab pasa a ser el entry point del flujo central de `UserPlaceEntry`
+- el cliente sigue sin hablar con tablas ni con Supabase
+- el slice funciona hoy solo en `stub mode`, pero ya usa el boundary y los contratos reales del backend
 
 ## Tradeoffs
 

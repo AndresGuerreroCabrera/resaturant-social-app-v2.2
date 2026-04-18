@@ -1,3 +1,3 @@
-import { HomeScreen } from "../../src/features/feed/screens/home-screen";
+import { PlacesHomeScreen } from "../../src/features/places/screens/places-home-screen";
 
-export default HomeScreen;
+export default PlacesHomeScreen;

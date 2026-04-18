@@ -42,6 +42,7 @@ apps/mobile/src/api/backend/
     create-stub-query-access.ts
     create-stub-command-access.ts
     stub-data.ts
+    stub-place-store.ts
     stub-profile-store.ts
   http/
     create-http-query-access.ts
@@ -168,8 +169,8 @@ Modo por defecto y seguro para la fase actual.
 Comportamiento:
 
 - algunas queries sirven datos tipados de ejemplo
-- el slice auth/profile usa un store local persistente encapsulado
-- `createOrUpdateProfile` solo se habilita en `stub` para sostener onboarding minimo y perfil
+- los slices auth/profile y places/listas personales usan stores locales persistentes encapsulados
+- `createOrUpdateProfile`, `resolvePlace`, `savePlaceToWishlist` y `markPlaceVisited` se habilitan en `stub` para sostener los primeros vertical slices reales
 - las operaciones no disponibles fallan de forma explicita con `runtime_not_ready`
 
 Decision cerrada:
@@ -198,12 +199,22 @@ Stubs reales implementados:
 - `getMyProfile`
 - `getPublicProfile`
 - `listRecommendationFeed`
+- `searchPlaces`
+- `getPlace`
+- `listMyUserPlaceEntries`
 - `createOrUpdateProfile`
+- `resolvePlace`
+- `savePlaceToWishlist`
+- `markPlaceVisited`
 
 Operaciones explicitamente no listas todavia:
 
-- el resto de queries
-- el resto de commands
+- `listMyFriendships`
+- `listMyRecommendationPosts`
+- `publishRecommendation`
+- `respondToRecommendation`
+- `addFriend`
+- `removeFriend`
 
 ## Query keys
 
@@ -216,6 +227,7 @@ Motivo:
 - evitar claves ad hoc por feature
 - facilitar invalidacion consistente cuando entren mutations reales
 - aislar correctamente la cache de `getMyProfile` por `sessionUserId`
+- aislar tambien las listas personales por `sessionUserId` para no mezclar cache entre sesiones stub
 
 ## Tradeoffs
 

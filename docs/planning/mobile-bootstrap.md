@@ -19,6 +19,7 @@ esperar a que `apps/api` este 100% operativo.
 - pantallas y queries iniciales en modo stub tipado
 - capa compartida `src/api/backend/` con adapters `stub | http`, query keys y separacion query/command
 - primer vertical slice auth/profile con onboarding minimo y lectura publica/privada
+- segundo vertical slice de places con busqueda, wishlist, visited y estados personales
 
 ## Como queda organizada la app
 
@@ -48,6 +49,7 @@ Pasos previstos cuando se instalen dependencias:
 - restauracion de sesion local
 - boundary claro hacia `apps/api`
 - slice auth/profile operativo en modo stub persistente
+- flujo central de places y listas personales operativo en modo stub persistente
 - ejemplos tipados de feed y perfil
 - base de tema y shell movil
 - data layer compartida para queries y commands
@@ -65,9 +67,9 @@ Pasos previstos cuando se instalen dependencias:
 ## Carpetas o piezas que siguen siendo preparacion
 
 - `src/api/backend/stubs/` contiene los stubs temporales reales
-- `src/features/recommendations/` es descriptiva, no interactiva
+- `src/features/recommendations/` y `src/features/feed/` siguen descriptivas, no interactivas
 - la sesion actual es bootstrap tecnico, no login final de producto
-- el onboarding y perfil actual dependen del adapter `stub`, no de transporte HTTP real
+- el onboarding, perfil y flujo de places actual dependen del adapter `stub`, no de transporte HTTP real
 
 ## Validacion manual recomendada
 
@@ -75,5 +77,7 @@ Pasos previstos cuando se instalen dependencias:
 - la raiz redirige a `(auth)` si no hay sesion
 - al guardar una sesion local en modo stub, la app pasa por onboarding y luego abre la shell autenticada
 - `profile.tsx` muestra owner profile y permite abrir la vista publica
+- `home.tsx` permite buscar lugar, resolver `place`, guardar en wishlist y marcar visitado
+- la home muestra mis listas `wishlist`, `visited` y `hidden` sin mezclar sesiones
 - las tabs navegan sin depender del legacy
 - las queries muestran stubs o errores claros, no integraciones falsas

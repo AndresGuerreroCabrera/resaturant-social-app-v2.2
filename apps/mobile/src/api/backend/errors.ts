@@ -66,7 +66,7 @@ export function mapMobileBackendError(error: unknown): MobileBackendError {
   if (error instanceof ApiResponseError) {
     return new MobileBackendError(
       "response",
-      `Backend request failed with status ${error.status}.`,
+      error.message,
       {
         cause: error,
         retryable: error.status >= 500
